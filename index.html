@@ -124,11 +124,26 @@
     
     <!-- Uniform height controls: h-7 -->
     <div class="pointer-events-auto flex items-center gap-2">
+        <!-- SOUND TOGGLE -->
         <button id="sound-btn" onclick="window.toggleAudio()" class="btn-ui flex items-center justify-center gap-1.5 h-7 px-2 font-mono text-[10px] tracking-widest uppercase">
             <div id="sound-dot" class="w-1.5 h-1.5 rounded-full bg-[#555] transition-colors"></div>
             <span id="sound-text" class="inv-text-muted transition-colors leading-none pt-[1px]">MUTED</span>
         </button>
 
+        <!-- CYCLING LANGUAGE BUTTON (EN -> ES -> 日本語) -->
+        <button id="lang-btn" onclick="window.cycleLang()" class="btn-ui flex items-center justify-center gap-1.5 h-7 px-2 font-mono text-[10px] tracking-widest uppercase inv-text transition-colors cursor-pointer" title="Switch Language">
+            <svg class="w-3.5 h-3.5 stroke-current fill-none shrink-0" viewBox="0 0 24 24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <line x1="12" y1="2" x2="12" y2="22"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                <path d="M3.3 7h17.4"></path>
+                <path d="M3.3 17h17.4"></path>
+            </svg>
+            <span id="lang-text" class="leading-none pt-[1px]">EN</span>
+        </button>
+
+        <!-- W/B TOGGLE -->
         <div id="wb-toggle" class="btn-ui flex items-center justify-center h-7 px-1 font-mono text-[10px] tracking-widest select-none">
             <div id="btn-w" onclick="window.setMode('W')" class="h-full px-1.5 flex items-center justify-center text-[#888] hover:text-white transition-colors cursor-pointer pt-[1px]">W</div>
             <span class="text-[#555] flex items-center justify-center h-full pt-[1px]">/</span>
@@ -323,6 +338,28 @@ window.toggleAudio = function() {
         soundText.classList.replace('inv-text', 'inv-text-muted');
         soundDot.classList.replace('bg-white', 'bg-[#555]');
         soundDot.classList.replace('bg-black', 'bg-[#555]');
+    }
+};
+
+/* ---------------------------------------------------------
+   CYCLING LANGUAGE SWITCHER (EN -> ES -> 日本語)
+--------------------------------------------------------- */
+window.languages = ['EN', 'ES', '日本語'];
+window.currentLangIndex = 0;
+window.currentLang = 'EN';
+
+window.cycleLang = function() {
+    window.currentLangIndex = (window.currentLangIndex + 1) % window.languages.length;
+    const nextLang = window.languages[window.currentLangIndex];
+    window.currentLang = nextLang;
+
+    const label = document.getElementById('lang-text');
+    if (label) {
+        label.innerText = nextLang;
+    }
+
+    if (window.applyLanguage) {
+        window.applyLanguage(nextLang);
     }
 };
 
@@ -719,7 +756,7 @@ window.modalData = {
                 </div>
             </div>
             <div class="flex justify-center md:justify-end">
-                <img src="assets/images/CLEAN_Furaibo_full_text-upscaled.png" alt="Furaibo Demon Logo" class="w-full max-w-[250px] md:max-w-[300px] object-contain" onerror="this.outerHTML='<div class=\'w-48 h-64 border border-zinc-800 flex items-center justify-center text-xs text-zinc-600\'>FURAIBO LOGO</div>'" />
+                <img src="assets/images/CLEAN_Furaibo_full_text-upscaled.png" alt="Furaibo Demon Logo" class="w-full max-w-[250px] md:max-w-[300px] object-contain" onerror="this.outerHTML='<div class=\\'w-48 h-64 border border-zinc-800 flex items-center justify-center text-xs text-zinc-600\\'>FURAIBO LOGO</div>'" />
             </div>
         </div>`
     },
