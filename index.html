@@ -290,25 +290,34 @@ window.toggleAudio = function() {
 
     if (!isAudioPlaying) {
         try {
-            // Binaural Beat: 108Hz Left, 116Hz Right (8Hz Alpha Beat)
+            // Binaural Beat + Mobile-Optimized Resonant Filter (108Hz Left, 116Hz Right)
             ambientOsc = audioCtx.createOscillator();
             let oscRight = audioCtx.createOscillator();
             let merger = audioCtx.createChannelMerger(2);
+            let filter = audioCtx.createBiquadFilter();
             ambientGain = audioCtx.createGain();
 
-            ambientOsc.type = "sine";
-            oscRight.type = "sine";
+            // Triangle wave passed through a 380Hz lowpass filter produces warm singing-bowl harmonics
+            // that phone speakers can clearly reproduce, while keeping the deep 108Hz binaural root
+            ambientOsc.type = "triangle";
+            oscRight.type = "triangle";
             
             ambientOsc.frequency.setValueAtTime(108, audioCtx.currentTime); 
             oscRight.frequency.setValueAtTime(116, audioCtx.currentTime);
 
+            filter.type = "lowpass";
+            filter.frequency.setValueAtTime(380, audioCtx.currentTime);
+            filter.Q.setValueAtTime(1.2, audioCtx.currentTime);
+
             ambientOsc.connect(merger, 0, 0); 
             oscRight.connect(merger, 0, 1);
-            merger.connect(ambientGain);
+            merger.connect(filter);
+            filter.connect(ambientGain);
             ambientGain.connect(audioCtx.destination);
 
+            // Boosted gain ramp (more than 2.5x louder than original 0.08)
             ambientGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-            ambientGain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 3);
+            ambientGain.gain.exponentialRampToValueAtTime(0.22, audioCtx.currentTime + 3);
             
             ambientOsc.start();
             oscRight.start();
