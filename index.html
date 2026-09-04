@@ -151,7 +151,7 @@
 <canvas id="pond-canvas"></canvas>
 
 <!-- ==========================================================
-     POND ICONS (WIDELY SCATTERED LAYOUT & MALA FOR LECTURES)
+     POND ICONS (WIDELY SCATTERED LAYOUT)
 =========================================================== -->
 <div id="pond-elements-layer" class="fixed inset-0 w-full h-full pointer-events-none z-20 overflow-hidden mix-blend-difference transition-colors duration-400">
     
@@ -259,6 +259,78 @@
     </div>
 </div>
 
+<!-- ============================================================
+   FIREBASE SYNC LOGIC
+============================================================ -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'furaibo-app';
+    let db, auth;
+
+    try {
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        if (Object.keys(firebaseConfig).length > 0) {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            const initAuth = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    if (auth.currentUser) {
+                        setupGlobalCounter(db, appId);
+                    }
+                } catch (e) {
+                    console.error("Auth error:", e);
+                }
+            };
+
+            function setupGlobalCounter(db, appId) {
+                const tallyRef = doc(db, 'artifacts', appId, 'public', 'data', 'mantras', 'global_tally');
+                
+                // Realtime listen starting from 0 if empty
+                onSnapshot(tallyRef, (snapshot) => {
+                    if (snapshot.exists()) {
+                        window.globalCount = snapshot.data().count || 0;
+                    } else {
+                        setDoc(tallyRef, { count: 0 }); // START AT ZERO
+                        window.globalCount = 0;
+                    }
+                    const display = document.getElementById('global-tally');
+                    if (display) display.innerText = window.globalCount.toLocaleString();
+                }, (error) => {
+                    console.error("Snapshot error:", error);
+                });
+
+                // Attach the sync function to window so standard script can call it
+                window.syncToFirebase = async (addedCount) => {
+                    try {
+                        const snap = await getDoc(tallyRef);
+                        if (snap.exists()) {
+                            await updateDoc(tallyRef, { count: snap.data().count + addedCount });
+                        } else {
+                            await setDoc(tallyRef, { count: addedCount });
+                        }
+                    } catch (e) {
+                        console.error("Sync error:", e);
+                    }
+                };
+            }
+
+            initAuth();
+        }
+    } catch(e) {
+        console.error("Firebase setup skipped.", e);
+    }
+</script>
+
 <script>
 // ============================================================
 //   AUDIO & GLOBAL START LOGIC
@@ -292,7 +364,7 @@ function toggleAudio() {
 
     if (!isAudioPlaying) {
         try {
-            // Binaural Alpha Beat: 108Hz Left, 116Hz Right (8Hz Alpha Difference)
+            // Binaural Alpha Beat: 108Hz Left, 116Hz Right (8Hz difference)
             ambientOsc = audioCtx.createOscillator();
             let oscRight = audioCtx.createOscillator();
             let merger = audioCtx.createChannelMerger(2);
@@ -318,7 +390,6 @@ function toggleAudio() {
             ambientOsc.rightEar = oscRight; 
             isAudioPlaying = true;
             
-            // Sync UI to ON
             soundText.innerText = "SOUND: ON";
             soundText.classList.replace('inv-text-muted', 'inv-text');
             soundDot.classList.replace('bg-[#555]', 'bg-white');
@@ -339,7 +410,6 @@ function toggleAudio() {
         ambientGain = null;
         isAudioPlaying = false;
         
-        // Sync UI to MUTED
         soundText.innerText = "MUTED";
         soundText.classList.replace('inv-text', 'inv-text-muted');
         soundDot.classList.replace('bg-white', 'bg-[#555]');
@@ -361,8 +431,8 @@ function setMode(mode) {
         isLightMode = true;
         document.body.classList.add('light');
         
-        btnW.className = "px-1.5 h-full flex items-center justify-center bg-black text-white transition-colors cursor-pointer pt-[2px]";
-        btnB.className = "px-1.5 h-full flex items-center justify-center text-[#888] hover:text-black transition-colors cursor-pointer pt-[2px]";
+        btnW.className = "h-full px-1.5 flex items-center justify-center bg-black text-white transition-colors cursor-pointer pt-[1px]";
+        btnB.className = "h-full px-1.5 flex items-center justify-center text-[#888] hover:text-black transition-colors cursor-pointer pt-[1px]";
         
         if(isAudioPlaying) {
             soundDot.classList.replace('bg-white', 'bg-black');
@@ -371,22 +441,20 @@ function setMode(mode) {
         isLightMode = false;
         document.body.classList.remove('light');
         
-        btnW.className = "px-1.5 h-full flex items-center justify-center text-[#888] hover:text-white transition-colors cursor-pointer pt-[2px]";
-        btnB.className = "px-1.5 h-full flex items-center justify-center bg-white text-black transition-colors cursor-pointer pt-[2px]";
+        btnW.className = "h-full px-1.5 flex items-center justify-center text-[#888] hover:text-white transition-colors cursor-pointer pt-[1px]";
+        btnB.className = "h-full px-1.5 flex items-center justify-center bg-white text-black transition-colors cursor-pointer pt-[1px]";
         
         if(isAudioPlaying) {
             soundDot.classList.replace('bg-black', 'bg-white');
         }
     }
     
-    // Immediate Canvas Fill Override
     if(trailCtx && width > 0) {
         trailCtx.fillStyle = isLightMode ? '#ffffff' : '#000000';
         trailCtx.fillRect(0, 0, width, height);
     }
 }
 
-// Global T Keyboard Macro
 document.addEventListener('keydown', function(event) {
     if (event.key.toLowerCase() === 't') {
         setMode(isLightMode ? 'B' : 'W');
@@ -439,7 +507,6 @@ function drawPond() {
         return;
     }
     
-    // Fill based on Light/Dark Mode
     ctx.fillStyle = isLightMode ? '#ffffff' : '#000000';
     ctx.fillRect(0, 0, width, height);
     trailCtx.fillStyle = isLightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)';
@@ -458,7 +525,6 @@ function drawPond() {
         trailCtx.beginPath();
         trailCtx.arc(k.x, k.y, 1.8, 0, Math.PI * 2);
         
-        // Trail Color adjustment for Light Mode
         if (isLightMode && !k.isCreator) {
              trailCtx.fillStyle = 'rgba(200, 200, 200, 1)';
              trailCtx.shadowColor = 'rgba(200, 200, 200, 1)';
@@ -481,7 +547,6 @@ function drawPond() {
         ctx.moveTo(-12, 0);
         ctx.quadraticCurveTo(-18, 4, -22, 2);
         
-        // Adjust Koi colors for visibility in Light Mode
         let colorBase = k.color.includes('217') ? 'rgba(241, 18, 10, 0.7)' : (isLightMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)');
         let colorOther = isLightMode ? 'rgba(200, 200, 200, 0.6)' : 'rgba(80, 80, 80, 0.6)';
         ctx.strokeStyle = k.isCreator ? colorBase : colorOther;
@@ -511,23 +576,21 @@ window.onload = function() { setTimeout(drawPond, 100); };
 // ============================================================
 //   MODAL DATA 
 // ============================================================
-let localMantraSessionCount = 0; 
-let globalCount = 843920; 
-let autoPaceInterval = null;
-let currentCPM = 40;
+window.localMantraSessionCount = 0; 
+window.globalCount = 0; 
+window.autoPaceInterval = null;
+window.currentCPM = 40;
 
 const modalData = {
     ceremonies: {
         title: "CEREMONIES",
         body: `
-        <!-- Generic Header -->
         <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
             <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">CEREMONIES</span>
             <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
                 × CLOSE [ESC]
             </button>
         </div>
-        <!-- Body -->
         <div class="p-6 sm:p-8 space-y-8">
             <p class="font-inter text-base sm:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
                 Visual and sound archives from ceremonies held at Furaibo in Buenos Aires.
@@ -668,7 +731,7 @@ const modalData = {
             </div>
             <div class="flex flex-col items-start md:items-end shrink-0">
                 <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase mb-1">AGGREGATE COUNT</span>
-                <span class="font-mono text-3xl sm:text-4xl inv-text" id="global-tally">843,920</span>
+                <span class="font-mono text-3xl sm:text-4xl inv-text" id="global-tally">0</span>
             </div>
         </div>
 
@@ -764,7 +827,7 @@ const modalData = {
                 <!-- Email Signup -->
                 <div class="w-full max-w-md">
                     <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase block mb-3">RECEIVE PRODUCTION UPDATES</span>
-                    <form onsubmit="submitEmail(event)" class="flex w-full border box-border-sync">
+                    <form id="doc-email-form" onsubmit="submitEmail(event)" class="flex w-full border box-border-sync">
                         <input type="email" id="doc-email-input" placeholder="RECIPIENT EMAIL" required class="flex-1 bg-transparent inv-text px-4 py-3 outline-none placeholder:text-[#555] font-mono tracking-widest text-[10px]" />
                         <button type="submit" id="doc-email-btn" class="bg-white text-black px-6 py-3 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors">ENTER</button>
                     </form>
@@ -782,6 +845,7 @@ function openPondModal(key, event) {
     const data = modalData[key];
     if (!data) return;
     
+    // Inject the selected body which now includes the headers internally
     container.innerHTML = data.body;
     
     modal.classList.remove("hidden");
@@ -789,7 +853,7 @@ function openPondModal(key, event) {
     
     if (key === 'million_mantras') {
         updateLocalCounterDisplay();
-        document.getElementById('global-tally').innerText = globalCount.toLocaleString();
+        document.getElementById('global-tally').innerText = window.globalCount.toLocaleString();
     }
 }
 
@@ -797,9 +861,9 @@ function closePondModal() {
     const modal = document.getElementById("pond-modal");
     modal.classList.add("hidden");
     modal.classList.remove("flex");
-    if(autoPaceInterval) {
-        clearInterval(autoPaceInterval);
-        autoPaceInterval = null;
+    if(window.autoPaceInterval) {
+        clearInterval(window.autoPaceInterval);
+        window.autoPaceInterval = null;
         
         // Reset the Auto-Pace button text visually
         const btn = document.getElementById('auto-btn');
@@ -812,7 +876,7 @@ function closePondModal() {
 
 // --- Tactile Gadget Logic ---
 
-// Pre-load the WAV audio template to allow for rapid, overlapping cloning
+// We create an audio element specifically for the chant to clone it rapidly
 const namandaAudioTemplate = new Audio("assets/audio/NAMANDA.wav");
 namandaAudioTemplate.preload = "auto";
 
@@ -843,23 +907,25 @@ function triggerMantraClick(event) {
         setTimeout(() => ripple.remove(), 600);
     }
 
-    localMantraSessionCount++;
+    window.localMantraSessionCount++;
     updateLocalCounterDisplay();
 }
 
 function updateLocalCounterDisplay() {
     const display = document.getElementById("local-session-counter");
     if (display) {
-        display.innerText = localMantraSessionCount.toString().padStart(5, '0');
+        display.innerText = window.localMantraSessionCount.toString().padStart(5, '0');
     }
 }
 
 function addToGlobal(event) {
-    if(localMantraSessionCount > 0) {
-        globalCount += localMantraSessionCount;
-        localMantraSessionCount = 0;
+    if(window.localMantraSessionCount > 0) {
+        let addedCount = window.localMantraSessionCount;
+        window.globalCount += addedCount;
+        window.localMantraSessionCount = 0;
+        
         updateLocalCounterDisplay();
-        document.getElementById('global-tally').innerText = globalCount.toLocaleString();
+        document.getElementById('global-tally').innerText = window.globalCount.toLocaleString();
         
         const btn = document.getElementById('sync-btn');
         if(btn) {
@@ -867,25 +933,32 @@ function addToGlobal(event) {
             btn.innerHTML = "SYNCED ✓";
             setTimeout(() => { btn.innerHTML = originalText; }, 1500);
         }
+        
+        // Trigger the Firebase write function if it exists
+        if (typeof window.syncToFirebase === 'function') {
+            window.syncToFirebase(addedCount);
+        }
     }
 }
 
 function updateTempo(val) {
-    currentCPM = val;
+    window.currentCPM = val;
     document.getElementById('cpm-display').innerText = `${val} CPM`;
     
-    if (autoPaceInterval) {
-        clearInterval(autoPaceInterval);
+    if (window.autoPaceInterval) {
+        clearInterval(window.autoPaceInterval);
         startAutoPaceLoop();
     }
 }
 
 function toggleAutoPace() {
     const btn = document.getElementById('auto-btn');
-    if (autoPaceInterval) {
-        clearInterval(autoPaceInterval);
-        autoPaceInterval = null;
+    if (window.autoPaceInterval) {
+        clearInterval(window.autoPaceInterval);
+        window.autoPaceInterval = null;
         btn.innerText = "START AUTO-PACE";
+        
+        // Handle visual classes based on mode
         btn.classList.remove('bg-white', 'text-black');
         if(document.body.classList.contains('light')) {
              btn.classList.remove('bg-black', 'text-white');
@@ -893,6 +966,8 @@ function toggleAutoPace() {
     } else {
         startAutoPaceLoop();
         btn.innerText = "STOP AUTO-PACE";
+        
+        // Handle visual classes based on mode
         if(document.body.classList.contains('light')) {
              btn.classList.add('bg-black', 'text-white');
         } else {
@@ -902,8 +977,8 @@ function toggleAutoPace() {
 }
 
 function startAutoPaceLoop() {
-    const msPerClick = (60 / currentCPM) * 1000;
-    autoPaceInterval = setInterval(() => {
+    const msPerClick = (60 / window.currentCPM) * 1000;
+    window.autoPaceInterval = setInterval(() => {
         const btn = document.getElementById('mantra-btn');
         if(btn) {
             btn.style.transform = "scale(0.95)";
@@ -956,5 +1031,81 @@ function submitEmail(e) {
     });
 }
 </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'furaibo-app';
+    let db, auth;
+
+    try {
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        if (Object.keys(firebaseConfig).length > 0) {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            const initAuth = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    if (auth.currentUser) {
+                        setupGlobalCounter(db, appId);
+                    }
+                } catch (e) {
+                    console.error("Auth error:", e);
+                }
+            };
+
+            function setupGlobalCounter(db, appId) {
+                const tallyRef = doc(db, 'artifacts', appId, 'public', 'data', 'mantras', 'global_tally');
+                
+                // Realtime listen starting from 0 if empty
+                onSnapshot(tallyRef, (snapshot) => {
+                    if (snapshot.exists()) {
+                        window.globalCount = snapshot.data().count || 0;
+                    } else {
+                        setDoc(tallyRef, { count: 0 }); // START AT ZERO
+                        window.globalCount = 0;
+                    }
+                    const display = document.getElementById('global-tally');
+                    if (display) display.innerText = window.globalCount.toLocaleString();
+                }, (error) => {
+                    console.error("Snapshot error:", error);
+                });
+
+                // Attach the sync function to window so standard script can call it
+                window.syncToFirebase = async (addedCount) => {
+                    if (db && auth && auth.currentUser) {
+                        try {
+                            const snap = await getDoc(tallyRef);
+                            if (snap.exists()) {
+                                await updateDoc(tallyRef, { count: snap.data().count + addedCount });
+                            } else {
+                                await setDoc(tallyRef, { count: addedCount });
+                            }
+                        } catch (e) {
+                            console.error("Sync error:", e);
+                        }
+                    }
+                };
+            }
+
+            initAuth();
+        }
+    } catch(e) {
+        console.error("Firebase setup skipped.", e);
+    }
+</script>
 </body>
 </html>
+"""
+
+with open('version9.html', 'w') as f:
+    f.write(html_content)
+}
+}
