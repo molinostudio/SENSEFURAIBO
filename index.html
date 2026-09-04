@@ -81,6 +81,13 @@
         .dot-invert { background-color: #ffffff; }
         body.light .dot-invert { background-color: #000000; }
 
+        /* Smooth Momentum Scrolling for Touch Devices */
+        .modal-scroll {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+        }
+
         .ripple-effect {
             position: absolute;
             border-radius: 50%;
@@ -255,9 +262,10 @@
     </div>
 </div>
 
-<div id="pond-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex-col items-center justify-center p-4 sm:p-8 overflow-y-auto transition-colors duration-500 pointer-events-auto">
-    <div class="w-full max-w-5xl box-light-sync border box-border-sync flex flex-col relative shadow-2xl modal-enter my-auto">
-        <div id="modal-content-container" class="w-full flex-1 flex flex-col"></div>
+<!-- RESPONSIVE MODAL CONTAINER (FIXED TO DYNAMIC VIEWPORT) -->
+<div id="pond-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex-col items-center justify-center p-2.5 sm:p-6 md:p-8 overflow-hidden transition-colors duration-500 pointer-events-auto">
+    <div class="w-full max-w-5xl max-h-[92dvh] sm:max-h-[88vh] box-light-sync border box-border-sync flex flex-col relative shadow-2xl modal-enter overflow-hidden my-auto rounded-sm">
+        <div id="modal-content-container" class="w-full flex-1 flex flex-col overflow-hidden min-h-0"></div>
     </div>
 </div>
 
@@ -534,35 +542,35 @@ window.modalData = {
     ceremonies: {
         title: "CEREMONIES",
         body: `
-        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
-            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">CEREMONIES</span>
-            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
-                × CLOSE [ESC]
+        <div class="w-full flex justify-between items-center p-3.5 sm:p-4 sm:px-6 border-b box-border-sync shrink-0 sticky top-0 z-20 box-light-sync">
+            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">CEREMONIES</span>
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] sm:text-[10px] tracking-widest border px-3 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
+                × CLOSE <span class="hidden sm:inline">[ESC]</span>
             </button>
         </div>
-        <div class="p-6 sm:p-8 space-y-8">
-            <p class="font-inter text-base sm:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
+        <div class="flex-1 overflow-y-auto modal-scroll p-5 sm:p-8 space-y-6 sm:space-y-8 min-h-0">
+            <p class="font-inter text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
                 Visual and sound archives from ceremonies held at Furaibo in Buenos Aires.
             </p>
-            <div class="pt-6 border-t box-border-sync flex flex-col gap-2">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">Urabon-e Ceremony</span>
-                    <div class="flex gap-6">
-                        <a href="https://youtu.be/FHfezKsCLiw" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
-                        <a href="https://drive.google.com/open?id=16-NULnnYv08lZB3APRFNOPMKVL-f4Riu&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+            <div class="pt-4 sm:pt-6 border-t box-border-sync flex flex-col gap-2.5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">Urabon-e Ceremony</span>
+                    <div class="flex gap-4 sm:gap-6">
+                        <a href="https://youtu.be/FHfezKsCLiw" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=16-NULnnYv08lZB3APRFNOPMKVL-f4Riu&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">✦ LISTEN</a>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] JO-BUTSU Ceremony</span>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/20 border border-transparent opacity-50">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] JO-BUTSU Ceremony</span>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] GANTAN CEREMONY</span>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/20 border border-transparent opacity-50">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] GANTAN CEREMONY</span>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] HOU-ON-KOU CEREMONY</span>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/20 border border-transparent opacity-50">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] HOU-ON-KOU CEREMONY</span>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] NEHAN-E CEREMONY</span>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/20 border border-transparent opacity-50">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] NEHAN-E CEREMONY</span>
                 </div>
             </div>
         </div>`
@@ -570,43 +578,43 @@ window.modalData = {
     lectures: {
         title: "LECTURES",
         body: `
-        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
-            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">LECTURES</span>
-            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
-                × CLOSE [ESC]
+        <div class="w-full flex justify-between items-center p-3.5 sm:p-4 sm:px-6 border-b box-border-sync shrink-0 sticky top-0 z-20 box-light-sync">
+            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">LECTURES</span>
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] sm:text-[10px] tracking-widest border px-3 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
+                × CLOSE <span class="hidden sm:inline">[ESC]</span>
             </button>
         </div>
-        <div class="p-6 sm:p-8 space-y-8">
-            <p class="font-inter text-base sm:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
+        <div class="flex-1 overflow-y-auto modal-scroll p-5 sm:p-8 space-y-6 sm:space-y-8 min-h-0">
+            <p class="font-inter text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
                 Direct recordings from weekly community sessions led by Sensei Gustavo and the Sangha.
             </p>
-            <div class="pt-6 border-t box-border-sync flex flex-col gap-2">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE MARCH 03, 2026</span>
-                    <div class="flex gap-6">
-                        <a href="https://drive.google.com/open?id=1bSHTEvJaWLLjTwDx4O3qn3xCbbawJkil&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
-                        <a href="https://drive.google.com/open?id=1zQ_SBHF8Fq7rDO44hRElyo0vG6wMcjlU&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+            <div class="pt-4 sm:pt-6 border-t box-border-sync flex flex-col gap-2.5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE MARCH 03, 2026</span>
+                    <div class="flex gap-4 sm:gap-6">
+                        <a href="https://drive.google.com/open?id=1bSHTEvJaWLLjTwDx4O3qn3xCbbawJkil&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1zQ_SBHF8Fq7rDO44hRElyo0vG6wMcjlU&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">✦ LISTEN</a>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 04, 2026</span>
-                    <div class="flex gap-6">
-                        <a href="https://drive.google.com/open?id=1lNMpW9p8LVfeFXkfQpBFNzLGWN9y3TP3&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
-                        <a href="https://drive.google.com/open?id=1lToc-6-5fHGZGJohHjxI9GOVUfz0O9o7&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 04, 2026</span>
+                    <div class="flex gap-4 sm:gap-6">
+                        <a href="https://drive.google.com/open?id=1lNMpW9p8LVfeFXkfQpBFNzLGWN9y3TP3&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1lToc-6-5fHGZGJohHjxI9GOVUfz0O9o7&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">✦ LISTEN</a>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 11, 2026</span>
-                    <div class="flex gap-6">
-                        <a href="https://drive.google.com/open?id=1zjEkLWz5_9dWrbq_vuzRaGW2BHoDsOvP&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
-                        <a href="https://drive.google.com/open?id=16eSuMM7BjsKS4BgK94c7lBinFxh3jAPL&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 11, 2026</span>
+                    <div class="flex gap-4 sm:gap-6">
+                        <a href="https://drive.google.com/open?id=1zjEkLWz5_9dWrbq_vuzRaGW2BHoDsOvP&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=16eSuMM7BjsKS4BgK94c7lBinFxh3jAPL&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">✦ LISTEN</a>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 18, 2026</span>
-                    <div class="flex gap-6">
-                        <a href="https://drive.google.com/open?id=1uVrw7K5EBFNhVsQaHhdcK_joqMjHH9_G&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
-                        <a href="https://drive.google.com/open?id=1AwJNHrv45FU6zCPrBD7LwwrbWWjAijtR&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 18, 2026</span>
+                    <div class="flex gap-4 sm:gap-6">
+                        <a href="https://drive.google.com/open?id=1uVrw7K5EBFNhVsQaHhdcK_joqMjHH9_G&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1AwJNHrv45FU6zCPrBD7LwwrbWWjAijtR&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">✦ LISTEN</a>
                     </div>
                 </div>
             </div>
@@ -615,43 +623,43 @@ window.modalData = {
     mantras: {
         title: "MANTRAS",
         body: `
-        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
-            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">MANTRAS</span>
-            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
-                × CLOSE [ESC]
+        <div class="w-full flex justify-between items-center p-3.5 sm:p-4 sm:px-6 border-b box-border-sync shrink-0 sticky top-0 z-20 box-light-sync">
+            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">MANTRAS</span>
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] sm:text-[10px] tracking-widest border px-3 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
+                × CLOSE <span class="hidden sm:inline">[ESC]</span>
             </button>
         </div>
-        <div class="p-6 sm:p-8 space-y-8">
-            <p class="font-inter text-base sm:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
+        <div class="flex-1 overflow-y-auto modal-scroll p-5 sm:p-8 space-y-6 sm:space-y-8 min-h-0">
+            <p class="font-inter text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
                 Recordings focused purely on the practice, chants, and acoustic space of weekly recitations.
             </p>
-            <div class="pt-6 border-t box-border-sync flex flex-col gap-2">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS JULY 30, 2026</span>
-                    <div class="flex gap-6">
-                        <a href="https://drive.google.com/open?id=1eIIJaFFGTj5OXWgusXL08SZIcq8rsKvL&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
-                        <a href="https://drive.google.com/open?id=1R_MJspgrBzfLyTcmHpdt7UrqwLak1AbO&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+            <div class="pt-4 sm:pt-6 border-t box-border-sync flex flex-col gap-2.5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS JULY 30, 2026</span>
+                    <div class="flex gap-4 sm:gap-6">
+                        <a href="https://drive.google.com/open?id=1eIIJaFFGTj5OXWgusXL08SZIcq8rsKvL&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1R_MJspgrBzfLyTcmHpdt7UrqwLak1AbO&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">✦ LISTEN</a>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 06, 2026</span>
-                    <div class="flex gap-6">
-                        <a href="https://drive.google.com/open?id=1kvvK3sBeLVdLwiSO3Qdvwt0dHE0bOFum&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
-                        <a href="https://drive.google.com/open?id=1n-srTgO2tNb82mESn8oJ71FVj9j8gGUU&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 06, 2026</span>
+                    <div class="flex gap-4 sm:gap-6">
+                        <a href="https://drive.google.com/open?id=1kvvK3sBeLVdLwiSO3Qdvwt0dHE0bOFum&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1n-srTgO2tNb82mESn8oJ71FVj9j8gGUU&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">✦ LISTEN</a>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 14, 2026</span>
-                    <div class="flex gap-6">
-                        <a href="https://drive.google.com/open?id=1GiHSQ3qb2wUrGywdA0nQIwOsXZZcPda1&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
-                        <a href="https://drive.google.com/open?id=1n-UrEnxMpt7dNLZ2HNHzY9j_aucxSmn0&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 14, 2026</span>
+                    <div class="flex gap-4 sm:gap-6">
+                        <a href="https://drive.google.com/open?id=1GiHSQ3qb2wUrGywdA0nQIwOsXZZcPda1&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1n-UrEnxMpt7dNLZ2HNHzY9j_aucxSmn0&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">✦ LISTEN</a>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
-                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 20, 2026</span>
-                    <div class="flex gap-6">
-                        <a href="https://drive.google.com/open?id=1kVS04hCAg7BMO1lShj6vpcN2cix0yuR5&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
-                        <a href="https://drive.google.com/open?id=1d3Mc7I-8ykmLacWvkS-cLeD5PGZiF9et&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 20, 2026</span>
+                    <div class="flex gap-4 sm:gap-6">
+                        <a href="https://drive.google.com/open?id=1kVS04hCAg7BMO1lShj6vpcN2cix0yuR5&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1d3Mc7I-8ykmLacWvkS-cLeD5PGZiF9et&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase py-1">✦ LISTEN</a>
                     </div>
                 </div>
             </div>
@@ -660,86 +668,88 @@ window.modalData = {
     million_mantras: {
         title: "THE MILLION MANTRAS",
         body: `
-        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
-            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">THE MILLION MANTRAS</span>
-            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
-                × CLOSE [ESC]
+        <div class="w-full flex justify-between items-center p-3.5 sm:p-4 sm:px-6 border-b box-border-sync shrink-0 sticky top-0 z-20 box-light-sync">
+            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">THE MILLION MANTRAS</span>
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] sm:text-[10px] tracking-widest border px-3 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
+                × CLOSE <span class="hidden sm:inline">[ESC]</span>
             </button>
         </div>
 
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end p-6 sm:p-8 border-b box-border-sync gap-8">
-            <div class="flex flex-col max-w-2xl gap-3">
-                <span class="font-inter font-light text-[13px] sm:text-sm tracking-wide inv-text leading-relaxed">The One Million Mantras is Furaibo’s annual gathering dedicated to the sustained, collective recitation of Namu Amida Butsu.</span>
-                <span class="font-inter text-[11px] text-[#888] leading-relaxed">Find your own pace and prepare for the upcoming ceremony. Use this space to practice your personal recitation.</span>
+        <div class="flex-1 overflow-y-auto modal-scroll min-h-0 relative">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end p-5 sm:p-8 border-b box-border-sync gap-4 sm:gap-8">
+                <div class="flex flex-col max-w-2xl gap-2 sm:gap-3">
+                    <span class="font-inter font-light text-xs sm:text-[13px] md:text-sm tracking-wide inv-text leading-relaxed">The One Million Mantras is Furaibo’s annual gathering dedicated to the sustained, collective recitation of Namu Amida Butsu.</span>
+                    <span class="font-inter text-[11px] text-[#888] leading-relaxed">Find your own pace and prepare for the upcoming ceremony. Use this space to practice your personal recitation.</span>
+                </div>
+                <div class="flex flex-col items-start md:items-end shrink-0">
+                    <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase mb-0.5 sm:mb-1">AGGREGATE COUNT</span>
+                    <span class="font-mono text-2xl sm:text-3xl md:text-4xl inv-text" id="global-tally">0</span>
+                </div>
             </div>
-            <div class="flex flex-col items-start md:items-end shrink-0">
-                <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase mb-1">AGGREGATE COUNT</span>
-                <span class="font-mono text-3xl sm:text-4xl inv-text" id="global-tally">0</span>
-            </div>
-        </div>
 
-        <div class="p-6 sm:p-8 relative overflow-hidden">
-            <div class="w-full border box-border-sync p-6 sm:p-12 flex flex-col items-center relative">
-                <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] absolute top-6 uppercase tag-invert px-2 py-0.5">WHEREVER YOU ARE, ENTER THE PRACTICE WITH US.</span>
+            <div class="p-4 sm:p-8 relative">
+                <div class="w-full border box-border-sync p-5 sm:p-12 flex flex-col items-center relative rounded-sm">
+                    <span class="font-mono text-[7px] sm:text-[8px] tracking-[0.2em] text-[#888] static sm:absolute sm:top-6 uppercase tag-invert px-2 py-0.5 text-center mb-6 sm:mb-0">WHEREVER YOU ARE, ENTER THE PRACTICE WITH US.</span>
 
-                <div class="relative w-40 h-40 sm:w-48 sm:h-48 mt-12 mb-10 flex items-center justify-center">
-                    <button id="mantra-btn" onpointerdown="window.triggerMantraClick(event)" class="absolute z-10 w-full h-full rounded-full border border-white box-border-sync flex flex-col items-center justify-center bg-transparent outline-none transition-transform duration-75 hover:bg-white/5 active:scale-95">
-                        <div class="w-4 h-4 rounded-full border-2 border-white box-border-sync flex items-center justify-center mb-2">
-                            <div class="w-1.5 h-1.5 rounded-full bg-white dot-invert"></div>
+                    <div class="relative w-36 h-36 sm:w-48 sm:h-48 my-6 sm:my-10 flex items-center justify-center shrink-0">
+                        <button id="mantra-btn" onpointerdown="window.triggerMantraClick(event)" class="absolute z-10 w-full h-full rounded-full border border-white box-border-sync flex flex-col items-center justify-center bg-transparent outline-none transition-transform duration-75 hover:bg-white/5 active:scale-95 touch-manipulation">
+                            <div class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-white box-border-sync flex items-center justify-center mb-1.5 sm:mb-2">
+                                <div class="w-1.5 h-1.5 rounded-full bg-white dot-invert"></div>
+                            </div>
+                            <span class="font-bebas text-xl sm:text-2xl tracking-widest inv-text mt-0.5 sm:mt-1">NAMANDA</span>
+                            <span class="font-mono text-[7px] sm:text-[8px] tracking-[0.2em] text-[#888] mt-1 sm:mt-2">TAP TO CHANT</span>
+                        </button>
+                        <div id="ripple-container" class="absolute inset-0 pointer-events-none rounded-full"></div>
+                    </div>
+
+                    <div class="flex flex-col items-center mb-8 sm:mb-10">
+                        <span class="font-mono text-[8px] sm:text-[9px] tracking-[0.2em] text-[#888] uppercase mb-1.5 sm:mb-2 text-center">YOUR SESSION RECITATIONS</span>
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <span class="font-mono text-3xl sm:text-5xl inv-text tracking-widest" id="local-session-counter">00000</span>
+                            <button id="sync-btn" onclick="window.quickSync()" class="font-mono text-[8px] sm:text-[9px] tracking-widest border border-[#222] box-border-sync px-2.5 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation" title="Add to Aggregate Count">
+                                + SYNC
+                            </button>
                         </div>
-                        <span class="font-bebas text-2xl tracking-widest inv-text mt-1">NAMANDA</span>
-                        <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] mt-2">TAP TO CHANT</span>
-                    </button>
-                    <div id="ripple-container" class="absolute inset-0 pointer-events-none rounded-full"></div>
-                </div>
+                    </div>
 
-                <div class="flex flex-col items-center mb-10">
-                    <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase mb-2">YOUR SESSION RECITATIONS</span>
-                    <div class="flex items-center gap-4">
-                        <span class="font-mono text-4xl sm:text-5xl inv-text tracking-widest" id="local-session-counter">00000</span>
-                        <button id="sync-btn" onclick="window.quickSync()" class="font-mono text-[9px] tracking-widest border border-[#222] box-border-sync px-2 py-1 box-btn-sync transition-colors uppercase" title="Add to Aggregate Count">
-                            + SYNC
-                        </button>
+                    <div class="w-full max-w-md border-t border-dashed border-[#555] pt-5 sm:pt-6 flex flex-col gap-4 sm:gap-6">
+                        <div class="flex justify-between items-center w-full">
+                            <span class="font-mono text-[8px] sm:text-[9px] tracking-[0.2em] text-[#888] uppercase">TEMPO PACE</span>
+                            <span class="font-mono text-[9px] sm:text-[10px] tracking-widest inv-text font-bold" id="cpm-display">40 CPM</span>
+                        </div>
+                        
+                        <input type="range" id="tempo-slider" min="40" max="150" value="40" oninput="window.updateTempo(this.value)" class="touch-manipulation py-2">
+                        
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 w-full">
+                            <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase">40 SLOW • 150 FAST</span>
+                            <button id="auto-btn" onclick="window.toggleAutoPace()" class="w-full sm:w-auto font-mono text-[9px] sm:text-[10px] tracking-widest border border-[#222] box-border-sync px-4 py-2.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
+                                START AUTO-PACE
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="w-full max-w-md border-t border-dashed border-[#555] pt-6 flex flex-col gap-6">
-                    <div class="flex justify-between items-center w-full">
-                        <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase">TEMPO PACE</span>
-                        <span class="font-mono text-[10px] tracking-widest inv-text font-bold" id="cpm-display">40 CPM</span>
+                
+                <!-- Responsive Registration Overlay inside the module -->
+                <div id="registration-overlay" class="absolute inset-0 box-light-sync/95 backdrop-blur-md z-30 hidden flex-col items-center justify-center p-4 sm:p-8 overflow-y-auto modal-scroll transition-opacity duration-300">
+                    <button onclick="window.cancelRegistration()" class="absolute top-4 right-4 sm:top-8 sm:right-8 font-mono text-[10px] text-[#888] hover:text-white uppercase transition-colors p-2">× CANCEL</button>
+                    <h3 class="font-mono text-[11px] sm:text-[12px] tracking-widest inv-text uppercase mb-4 sm:mb-6 text-center">REGISTER YOUR SESSION</h3>
+                    <p class="font-inter text-[11px] sm:text-xs text-[#888] text-center max-w-md mb-6 sm:mb-8 leading-relaxed">
+                        You are about to sync <span class="inv-text font-bold" id="overlay-session-count">0</span> recitations globally. Would you like to leave your name and location in the permanent archive?
+                    </p>
+                    <div class="w-full max-w-sm flex flex-col gap-4">
+                        <input type="text" id="reg-name" placeholder="NAME / INITIATIVE (OPTIONAL)" class="w-full bg-transparent border-b box-border-sync inv-text px-2 py-2 outline-none font-mono tracking-widest text-[10px] placeholder:text-[#555]" />
+                        <input type="text" id="reg-location" placeholder="CITY / COUNTRY (OPTIONAL)" class="w-full bg-transparent border-b box-border-sync inv-text px-2 py-2 outline-none font-mono tracking-widest text-[10px] placeholder:text-[#555]" />
+                        
+                        <div class="flex flex-col sm:flex-row justify-between gap-3 mt-4 sm:mt-6">
+                            <button onclick="window.submitSync(false)" class="font-mono text-[10px] tracking-widest text-[#555] hover:text-white transition-colors uppercase py-2.5 text-center">
+                                SKIP (ANONYMOUS)
+                            </button>
+                            <button onclick="window.submitSync(true)" class="bg-white text-black px-6 py-2.5 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors uppercase text-center active:scale-95">
+                                SYNC WITH NAME
+                            </button>
+                        </div>
+                        <span id="reg-msg" class="text-center font-mono text-[9px] tracking-widest text-[#555] mt-2 h-4"></span>
                     </div>
-                    
-                    <input type="range" id="tempo-slider" min="40" max="150" value="40" oninput="window.updateTempo(this.value)">
-                    
-                    <div class="flex justify-between items-center w-full">
-                        <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase">40 SLOW • 150 FAST</span>
-                        <button id="auto-btn" onclick="window.toggleAutoPace()" class="font-mono text-[10px] tracking-widest border border-[#222] box-border-sync px-4 py-2 box-btn-sync transition-colors uppercase">
-                            START AUTO-PACE
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Registration Overlay inside the module -->
-            <div id="registration-overlay" class="absolute inset-0 bg-black/90 backdrop-blur-md z-20 hidden flex-col items-center justify-center p-8 transition-opacity duration-300">
-                <button onclick="window.cancelRegistration()" class="absolute top-8 right-8 font-mono text-[10px] text-[#888] hover:text-white uppercase transition-colors">× CANCEL</button>
-                <h3 class="font-mono text-[12px] tracking-widest inv-text uppercase mb-6 text-center">REGISTER YOUR SESSION</h3>
-                <p class="font-inter text-xs text-[#888] text-center max-w-md mb-8">
-                    You are about to sync <span class="inv-text font-bold" id="overlay-session-count">0</span> recitations globally. Would you like to leave your name and location in the permanent archive?
-                </p>
-                <div class="w-full max-w-sm flex flex-col gap-4">
-                    <input type="text" id="reg-name" placeholder="NAME / INITIATIVE (OPTIONAL)" class="w-full bg-transparent border-b box-border-sync inv-text px-2 py-2 outline-none font-mono tracking-widest text-[10px] placeholder:text-[#555]" />
-                    <input type="text" id="reg-location" placeholder="CITY / COUNTRY (OPTIONAL)" class="w-full bg-transparent border-b box-border-sync inv-text px-2 py-2 outline-none font-mono tracking-widest text-[10px] placeholder:text-[#555]" />
-                    
-                    <div class="flex justify-between mt-6">
-                        <button onclick="window.submitSync(false)" class="font-mono text-[10px] tracking-widest text-[#555] hover:text-white transition-colors uppercase py-2">
-                            SKIP (ANONYMOUS)
-                        </button>
-                        <button onclick="window.submitSync(true)" class="bg-white text-black px-6 py-2 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors uppercase">
-                            SYNC WITH NAME
-                        </button>
-                    </div>
-                    <span id="reg-msg" class="text-center font-mono text-[9px] tracking-widest text-[#555] mt-2 h-4"></span>
                 </div>
             </div>
         </div>`
@@ -747,48 +757,50 @@ window.modalData = {
     sanctuary: {
         title: "FURAIBO BUENOS AIRES",
         body: `
-        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
-            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">FURAIBO BUENOS AIRES</span>
-            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
-                × CLOSE [ESC]
+        <div class="w-full flex justify-between items-center p-3.5 sm:p-4 sm:px-6 border-b box-border-sync shrink-0 sticky top-0 z-20 box-light-sync">
+            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">FURAIBO BUENOS AIRES</span>
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] sm:text-[10px] tracking-widest border px-3 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
+                × CLOSE <span class="hidden sm:inline">[ESC]</span>
             </button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 p-6 sm:p-8 items-center pointer-events-auto">
-            <div class="space-y-12 pr-0 md:pr-12">
-                <p class="font-inter text-base sm:text-lg font-light leading-relaxed inv-text-muted">
-                    In Buenos Aires, Furaibo brings together a restaurant, a natural medicine practice and a Buddhist temple within the same place.
-                </p>
-                <div class="flex flex-col gap-6 font-mono text-xs sm:text-sm text-zinc-400">
-                    <a href="https://www.furaiboba.com.ar/" target="_blank" class="hover:text-white transition-colors">FURAIBOBA.COM.AR</a>
-                    <a href="https://www.instagram.com/furaiboba/" target="_blank" class="hover:text-white transition-colors">@FURAIBOBA</a>
-                    <a href="https://goo.gl/maps/p3Djc2dhpfken5pKA" target="_blank" class="hover:text-white transition-colors">ADOLFO ALSINA 429 · BUENOS AIRES</a>
+        <div class="flex-1 overflow-y-auto modal-scroll p-5 sm:p-8 min-h-0">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center pointer-events-auto">
+                <div class="space-y-6 sm:space-y-10 pr-0 md:pr-12">
+                    <p class="font-inter text-sm sm:text-base md:text-lg font-light leading-relaxed inv-text-muted">
+                        In Buenos Aires, Furaibo brings together a restaurant, a natural medicine practice and a Buddhist temple within the same place.
+                    </p>
+                    <div class="flex flex-col gap-4 font-mono text-xs sm:text-sm text-zinc-400">
+                        <a href="https://www.furaiboba.com.ar/" target="_blank" class="hover:text-white transition-colors py-1 inline-block">FURAIBOBA.COM.AR</a>
+                        <a href="https://www.instagram.com/furaiboba/" target="_blank" class="hover:text-white transition-colors py-1 inline-block">@FURAIBOBA</a>
+                        <a href="https://goo.gl/maps/p3Djc2dhpfken5pKA" target="_blank" class="hover:text-white transition-colors py-1 inline-block">ADOLFO ALSINA 429 · BUENOS AIRES</a>
+                    </div>
                 </div>
-            </div>
-            <div class="flex justify-center md:justify-end">
-                <img src="assets/images/CLEAN_Furaibo_full_text-upscaled.png" alt="Furaibo Demon Logo" class="w-full max-w-[250px] md:max-w-[300px] object-contain" onerror="this.outerHTML='<div class=\\'w-48 h-64 border border-zinc-800 flex items-center justify-center text-xs text-zinc-600\\'>FURAIBO LOGO</div>'" />
+                <div class="flex justify-center md:justify-end mt-4 md:mt-0">
+                    <img src="assets/images/CLEAN_Furaibo_full_text-upscaled.png" alt="Furaibo Demon Logo" class="w-full max-w-[200px] sm:max-w-[250px] md:max-w-[300px] object-contain" onerror="this.outerHTML='<div class=\\'w-48 h-64 border border-zinc-800 flex items-center justify-center text-xs text-zinc-600\\'>FURAIBO LOGO</div>'" />
+                </div>
             </div>
         </div>`
     },
     documentary: {
         title: "DOCUMENTARY",
         body: `
-        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
-            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">DOCUMENTARY</span>
-            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
-                × CLOSE [ESC]
+        <div class="w-full flex justify-between items-center p-3.5 sm:p-4 sm:px-6 border-b box-border-sync shrink-0 sticky top-0 z-20 box-light-sync">
+            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">DOCUMENTARY</span>
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] sm:text-[10px] tracking-widest border px-3 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
+                × CLOSE <span class="hidden sm:inline">[ESC]</span>
             </button>
         </div>
-        <div class="p-6 sm:p-8 space-y-8 pointer-events-auto">
-            <p class="font-inter text-base sm:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
+        <div class="flex-1 overflow-y-auto modal-scroll p-5 sm:p-8 space-y-6 sm:space-y-8 pointer-events-auto min-h-0">
+            <p class="font-inter text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
                 The visual journey documenting the temple, the practice, and the people of Furaibo.
             </p>
-            <div class="pt-6 border-t box-border-sync">
-                <p class="font-mono text-[10px] tracking-widest text-[#888] mb-12 uppercase">[ IN PRODUCTION ]</p>
+            <div class="pt-4 sm:pt-6 border-t box-border-sync">
+                <p class="font-mono text-[10px] tracking-widest text-[#888] mb-6 sm:mb-10 uppercase">[ IN PRODUCTION ]</p>
                 <div class="w-full max-w-md">
                     <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase block mb-3">RECEIVE PRODUCTION UPDATES</span>
-                    <form id="doc-email-form" onsubmit="window.submitEmail(event)" class="flex w-full border box-border-sync">
+                    <form id="doc-email-form" onsubmit="window.submitEmail(event)" class="flex flex-col sm:flex-row w-full border box-border-sync">
                         <input type="email" id="doc-email-input" placeholder="RECIPIENT EMAIL" required class="flex-1 bg-transparent inv-text px-4 py-3 outline-none placeholder:text-[#555] font-mono tracking-widest text-[10px]" />
-                        <button type="submit" id="doc-email-btn" class="bg-white text-black px-6 py-3 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors">ENTER</button>
+                        <button type="submit" id="doc-email-btn" class="bg-white text-black px-6 py-3 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors uppercase active:scale-95">ENTER</button>
                     </form>
                     <span id="doc-email-msg" class="text-[#888] font-mono text-[9px] tracking-widest mt-3 block h-4"></span>
                 </div>
@@ -825,6 +837,16 @@ window.closePondModal = function() {
     }
     window.forceCloseModal();
 };
+
+/* Close on backdrop touch/click */
+const pondModalOverlay = document.getElementById("pond-modal");
+if (pondModalOverlay) {
+    pondModalOverlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+            window.closePondModal();
+        }
+    });
+}
 
 window.forceCloseModal = function() {
     const modal = document.getElementById("pond-modal");
