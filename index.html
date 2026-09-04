@@ -10,19 +10,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@200;300;400;500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root { --furaibo-red: #f1120a; }
-        /* Strict monochrome defaults */
-        html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000000; font-family: 'Inter', sans-serif; color: #ffffff; user-select: none; transition: background-color 0.4s ease, color 0.4s ease; }
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000000;
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            user-select: none;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
         .font-bebas { font-family: 'Bebas Neue', sans-serif; }
         .font-mono { font-family: 'Space Mono', monospace; }
         
-        /* -------------------------------------------------------
-           BACKGROUND CANVAS
-        ------------------------------------------------------- */
-        #pond-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: auto; cursor: crosshair; }
+        #pond-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: auto;
+            cursor: crosshair;
+        }
         
-        /* -------------------------------------------------------
-           ICON FLOAT
-        ------------------------------------------------------- */
+        /* Floating animations for icons */
         @keyframes floatDrift1 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(22px,-16px,0); } }
         @keyframes floatDrift2 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-24px,18px,0); } }
         @keyframes floatDrift3 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(18px,24px,0); } }
@@ -31,50 +43,31 @@
         .float-drift-3 { animation: floatDrift3 16s ease-in-out infinite; }
         .furaibo-icon { filter: none !important; box-shadow: none !important; transition: stroke 0.3s; }
         
-        /* -------------------------------------------------------
-           MODAL
-        ------------------------------------------------------- */
-        .modal-enter { animation: modalGrow 0.4s cubic-bezier(0.16,1,0.3,1) forwards; }
-        @keyframes modalGrow { 0% { opacity: 0; transform: scale(0.98) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-enter { animation: modalGrow 0.35s cubic-bezier(0.16,1,0.3,1) forwards; }
+        @keyframes modalGrow { 0% { opacity: 0; transform: scale(0.98) translateY(8px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--furaibo-red); }
 
-        /* -------------------------------------------------------
-           RADICAL MONOCHROME - LIGHT MODE OVERRIDES
-        ------------------------------------------------------- */
+        /* Radical Monochrome Light Mode */
         body.light { background-color: #ffffff; color: #000000; }
-        
-        /* Hairlines */
         .hairline-b { border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
         body.light .hairline-b { border-bottom: 1px solid rgba(0, 0, 0, 0.15); }
         .hairline-border { border: 1px solid rgba(255, 255, 255, 0.15); }
         body.light .hairline-border { border: 1px solid rgba(0, 0, 0, 0.15); }
-        
-        /* Text Inversions */
         .inv-text { color: #ffffff; }
         body.light .inv-text { color: #000000; }
         .inv-text-muted { color: #888888; }
         body.light .inv-text-muted { color: #888888; }
-        
-        /* Disable blend mode on white background to prevent invisible text */
         body.light .mix-blend-difference { mix-blend-mode: normal !important; }
-        /* Invert the white seal image to black */
         body.light img[alt="Furaibo Seal"] { filter: invert(1); }
-        /* Force svg icons to black lines */
         body.light .furaibo-icon { stroke: #000000 !important; color: #000000 !important; }
-        
-        /* Keep Furaibo Red strictly red */
         .keep-red { color: var(--furaibo-red) !important; }
         .hover\:text-red-500:hover { color: var(--furaibo-red) !important; }
-        
-        /* Buttons */
-        .btn-ui { border: 1px solid rgba(255,255,255,0.2); background: transparent; transition: all 0.2s; border-radius: 2px;}
+        .btn-ui { border: 1px solid rgba(255,255,255,0.2); background: transparent; transition: all 0.2s; border-radius: 2px; }
         body.light .btn-ui { border: 1px solid rgba(0,0,0,0.2); background: transparent; }
 
-        /* -------------------------------------------------------
-           TACTILE GADGET STYLES
-        ------------------------------------------------------- */
+        /* Tactile Gadget Tokens */
         .box-light-sync { background-color: #0a0a0a; border-color: #222; }
         body.light .box-light-sync { background-color: #ffffff; border-color: #e0e0e0; }
         .box-border-sync { border-color: #222; }
@@ -89,74 +82,73 @@
         body.light .dot-invert { background-color: #000000; }
 
         .ripple-effect {
-            position: absolute; border-radius: 50%;
+            position: absolute;
+            border-radius: 50%;
             border: 1px solid rgba(255,255,255,0.8);
-            transform: scale(0); animation: rippleAnim 0.6s linear; pointer-events: none;
+            transform: scale(0);
+            animation: rippleAnim 0.6s linear;
+            pointer-events: none;
         }
         body.light .ripple-effect { border: 1px solid rgba(0,0,0,0.5); }
         @keyframes rippleAnim { to { transform: scale(3); opacity: 0; } }
 
         input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
-            background: #ffffff; cursor: pointer; margin-top: -6px; border: 1px solid #222;
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            margin-top: -6px;
+            border: 1px solid #222;
         }
         body.light input[type=range]::-webkit-slider-thumb { background: #000000; border-color: #e0e0e0; }
         input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px; cursor: pointer; background: #333333; border-radius: 2px;
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #333333;
+            border-radius: 2px;
         }
         body.light input[type=range]::-webkit-slider-runnable-track { background: #cccccc; }
     </style>
 </head>
-<body class="dark">
+<body class="dark font-inter">
 
-<!-- ==========================================================
-     GLOBAL HEADER (IDENTICAL BUTTON HEIGHTS & SCALED SEAL)
-=========================================================== -->
 <header class="fixed top-0 left-0 w-full z-40 p-4 sm:px-6 flex justify-between items-center pointer-events-none mix-blend-difference transition-colors duration-400">
-    <!-- LEFT: ICON ONLY (Scaled to 2x size: w-12 h-12) -->
+    <!-- Double-sized seal logo: w-12 h-12 -->
     <div class="flex items-center pointer-events-auto">
-        <img src="assets/images/BlancoSello_Transparente.png" alt="Furaibo Seal" class="w-12 h-12 object-contain" onerror="this.outerHTML='<div class=\\'w-12 h-12 border border-white inv-text font-mono text-[10px] flex items-center justify-center\\'>SEAL</div>'" />
+        <img src="assets/images/BlancoSello_Transparente.png" alt="Furaibo Seal" class="w-12 h-12 object-contain" onerror="this.outerHTML='<div class=\'w-12 h-12 border border-white inv-text font-mono text-[8px] flex items-center justify-center\'>SEAL</div>'" />
     </div>
     
-    <!-- RIGHT: MECHANICAL SWITCHES (Exactly matched heights) -->
+    <!-- Uniform height controls: h-7 -->
     <div class="pointer-events-auto flex items-center gap-2">
-        <!-- SOUND TOGGLE (Height exactly h-7) -->
-        <button id="sound-btn" onclick="toggleAudio()" class="btn-ui flex items-center justify-center gap-1.5 h-7 px-2 font-mono text-[10px] tracking-widest uppercase">
+        <button id="sound-btn" onclick="window.toggleAudio()" class="btn-ui flex items-center justify-center gap-1.5 h-7 px-2 font-mono text-[10px] tracking-widest uppercase">
             <div id="sound-dot" class="w-1.5 h-1.5 rounded-full bg-[#555] transition-colors"></div>
             <span id="sound-text" class="inv-text-muted transition-colors leading-none pt-[1px]">MUTED</span>
         </button>
 
-        <!-- W/B TOGGLE (Height exactly h-7) -->
         <div id="wb-toggle" class="btn-ui flex items-center justify-center h-7 px-1 font-mono text-[10px] tracking-widest select-none">
-            <div id="btn-w" onclick="setMode('W')" class="h-full px-1.5 flex items-center justify-center text-[#888] hover:text-white transition-colors cursor-pointer pt-[1px]">W</div>
+            <div id="btn-w" onclick="window.setMode('W')" class="h-full px-1.5 flex items-center justify-center text-[#888] hover:text-white transition-colors cursor-pointer pt-[1px]">W</div>
             <span class="text-[#555] flex items-center justify-center h-full pt-[1px]">/</span>
-            <div id="btn-b" onclick="setMode('B')" class="h-full px-1.5 flex items-center justify-center bg-white text-black transition-colors cursor-pointer pt-[1px]">B</div>
+            <div id="btn-b" onclick="window.setMode('B')" class="h-full px-1.5 flex items-center justify-center bg-white text-black transition-colors cursor-pointer pt-[1px]">B</div>
         </div>
     </div>
 </header>
 
-<!-- ==========================================================
-     CENTERED PERSISTENT HEADER
-=========================================================== -->
 <div class="fixed top-[64px] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center text-center pointer-events-none w-full mix-blend-difference px-4 transition-colors duration-400">
     <h2 class="font-mono text-[8px] sm:text-[9px] tracking-[0.6em] inv-text-muted uppercase mb-3 leading-none mt-[2px]">NAMO AMIDA BUTSU</h2>
     <h1 class="font-bebas text-4xl sm:text-5xl tracking-widest inv-text mb-2 leading-none">FURAIBO</h1>
     <p class="font-mono text-[8px] sm:text-[9px] tracking-[0.4em] uppercase keep-red leading-none mt-1">A SENSORIAL EXPERIENCE</p>
 </div>
 
-<!-- ==========================================================
-     INTERACTIVE POND CANVAS
-=========================================================== -->
 <canvas id="pond-canvas"></canvas>
 
-<!-- ==========================================================
-     POND ICONS (WIDELY SCATTERED LAYOUT)
-=========================================================== -->
 <div id="pond-elements-layer" class="fixed inset-0 w-full h-full pointer-events-none z-20 overflow-hidden mix-blend-difference transition-colors duration-400">
     
     <!-- 1. CEREMONIES (Enso) -->
-    <div onclick="openPondModal('ceremonies', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="top:30%; left:12%;">
+    <div onclick="window.openPondModal('ceremonies', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="top:30%; left:12%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 sm:w-20 sm:h-20 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -177,7 +169,7 @@
     </div>
 
     <!-- 2. LECTURES (Mala Beads) -->
-    <div onclick="openPondModal('lectures', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="top:25%; right:15%;">
+    <div onclick="window.openPondModal('lectures', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="top:25%; right:15%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 120" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -189,8 +181,8 @@
         </div>
     </div>
 
-    <!-- 3. MANTRAS (Concentric Rings) -->
-    <div onclick="openPondModal('mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="top:50%; left:42%;">
+    <!-- 3. MANTRAS (Concentric Circles) -->
+    <div onclick="window.openPondModal('mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="top:50%; left:42%;">
         <div class="relative flex flex-col items-center">
             <div class="w-14 h-14 sm:w-16 sm:h-16 relative transition-transform duration-700 transform group-hover:scale-110">
                  <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -203,7 +195,7 @@
     </div>
 
     <!-- 4. THE MILLION MANTRAS -->
-    <div onclick="openPondModal('million_mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="bottom:30%; right:35%;">
+    <div onclick="window.openPondModal('million_mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="bottom:30%; right:35%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 120" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -215,7 +207,7 @@
     </div>
 
     <!-- 5. FURAIBO BUENOS AIRES -->
-    <div onclick="openPondModal('sanctuary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="bottom:20%; left:18%;">
+    <div onclick="window.openPondModal('sanctuary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="bottom:20%; left:18%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -226,8 +218,8 @@
         </div>
     </div>
     
-    <!-- 6. DOCUMENTARY (Movie Slate) -->
-    <div onclick="openPondModal('documentary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="bottom:18%; right:12%;">
+    <!-- 6. DOCUMENTARY -->
+    <div onclick="window.openPondModal('documentary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="bottom:18%; right:12%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 sm:w-20 sm:h-20 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -248,99 +240,18 @@
     </div>
 </div>
 
-<!-- ==========================================================
-     GLOBAL MODAL CONTAINER (BOX STRUCTURE)
-=========================================================== -->
 <div id="pond-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex-col items-center justify-center p-4 sm:p-8 overflow-y-auto transition-colors duration-500 pointer-events-auto">
-    <!-- Main Modal Box -->
     <div class="w-full max-w-5xl box-light-sync border box-border-sync flex flex-col relative shadow-2xl modal-enter my-auto">
-        <!-- Re-rendered content gets injected here -->
         <div id="modal-content-container" class="w-full flex-1 flex flex-col"></div>
     </div>
 </div>
 
-<!-- ============================================================
-   FIREBASE SYNC LOGIC
-============================================================ -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'furaibo-app';
-    let db, auth;
-
-    try {
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        if (Object.keys(firebaseConfig).length > 0) {
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-
-            const initAuth = async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    if (auth.currentUser) {
-                        setupGlobalCounter(db, appId);
-                    }
-                } catch (e) {
-                    console.error("Auth error:", e);
-                }
-            };
-
-            function setupGlobalCounter(db, appId) {
-                const tallyRef = doc(db, 'artifacts', appId, 'public', 'data', 'mantras', 'global_tally');
-                
-                // Realtime listen starting from 0 if empty
-                onSnapshot(tallyRef, (snapshot) => {
-                    if (snapshot.exists()) {
-                        window.globalCount = snapshot.data().count || 0;
-                    } else {
-                        setDoc(tallyRef, { count: 0 }); // START AT ZERO
-                        window.globalCount = 0;
-                    }
-                    const display = document.getElementById('global-tally');
-                    if (display) display.innerText = window.globalCount.toLocaleString();
-                }, (error) => {
-                    console.error("Snapshot error:", error);
-                });
-
-                // Attach the sync function to window so standard script can call it
-                window.syncToFirebase = async (addedCount) => {
-                    try {
-                        const snap = await getDoc(tallyRef);
-                        if (snap.exists()) {
-                            await updateDoc(tallyRef, { count: snap.data().count + addedCount });
-                        } else {
-                            await setDoc(tallyRef, { count: addedCount });
-                        }
-                    } catch (e) {
-                        console.error("Sync error:", e);
-                    }
-                };
-            }
-
-            initAuth();
-        }
-    } catch(e) {
-        console.error("Firebase setup skipped.", e);
-    }
-</script>
-
 <script>
-// ============================================================
-//   AUDIO & GLOBAL START LOGIC
-// ============================================================
 let audioCtx = null;
 let isAudioPlaying = false;
 let ambientOsc = null;
 let ambientGain = null;
 
-// Audio context requires interaction. A click anywhere starts it.
 document.body.addEventListener('click', function unlockAudio() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -351,7 +262,7 @@ document.body.addEventListener('click', function unlockAudio() {
     document.body.removeEventListener('click', unlockAudio);
 }, { once: true });
 
-function toggleAudio() {
+window.toggleAudio = function() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -364,7 +275,7 @@ function toggleAudio() {
 
     if (!isAudioPlaying) {
         try {
-            // Binaural Alpha Beat: 108Hz Left, 116Hz Right (8Hz difference)
+            // Binaural Beat: 108Hz Left, 116Hz Right (8Hz Alpha Beat)
             ambientOsc = audioCtx.createOscillator();
             let oscRight = audioCtx.createOscillator();
             let merger = audioCtx.createChannelMerger(2);
@@ -393,7 +304,7 @@ function toggleAudio() {
             soundText.innerText = "SOUND: ON";
             soundText.classList.replace('inv-text-muted', 'inv-text');
             soundDot.classList.replace('bg-[#555]', 'bg-white');
-            if(isLightMode) soundDot.classList.replace('bg-white', 'bg-black');
+            if(window.isLightMode) soundDot.classList.replace('bg-white', 'bg-black');
             
         } catch(e) { console.error("Audio generation failed:", e); }
     } else {
@@ -402,9 +313,7 @@ function toggleAudio() {
             ambientGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
             const oscL = ambientOsc;
             const oscR = ambientOsc.rightEar;
-            setTimeout(() => { 
-                try { oscL.stop(); oscR.stop(); } catch(e) {} 
-            }, 1000);
+            setTimeout(() => { try { oscL.stop(); oscR.stop(); } catch(e) {} }, 1000);
         }
         ambientOsc = null;
         ambientGain = null;
@@ -415,75 +324,70 @@ function toggleAudio() {
         soundDot.classList.replace('bg-white', 'bg-[#555]');
         soundDot.classList.replace('bg-black', 'bg-[#555]');
     }
-}
+};
 
-// ============================================================
-//   RADICAL MONOCHROME TOGGLE LOGIC
-// ============================================================
-let isLightMode = false;
+window.isLightMode = false;
 
-function setMode(mode) {
+window.setMode = function(mode) {
     const btnW = document.getElementById('btn-w');
     const btnB = document.getElementById('btn-b');
     const soundDot = document.getElementById('sound-dot');
     
     if (mode === 'W') {
-        isLightMode = true;
+        window.isLightMode = true;
         document.body.classList.add('light');
         
-        btnW.className = "h-full px-1.5 flex items-center justify-center bg-black text-white transition-colors cursor-pointer pt-[1px]";
-        btnB.className = "h-full px-1.5 flex items-center justify-center text-[#888] hover:text-black transition-colors cursor-pointer pt-[1px]";
+        btnW.className = "px-1.5 h-full flex items-center justify-center bg-black text-white transition-colors cursor-pointer pt-[1px]";
+        btnB.className = "px-1.5 h-full flex items-center justify-center text-[#888] hover:text-black transition-colors cursor-pointer pt-[1px]";
         
         if(isAudioPlaying) {
             soundDot.classList.replace('bg-white', 'bg-black');
         }
     } else {
-        isLightMode = false;
+        window.isLightMode = false;
         document.body.classList.remove('light');
         
-        btnW.className = "h-full px-1.5 flex items-center justify-center text-[#888] hover:text-white transition-colors cursor-pointer pt-[1px]";
-        btnB.className = "h-full px-1.5 flex items-center justify-center bg-white text-black transition-colors cursor-pointer pt-[1px]";
+        btnW.className = "px-1.5 h-full flex items-center justify-center text-[#888] hover:text-white transition-colors cursor-pointer pt-[1px]";
+        btnB.className = "px-1.5 h-full flex items-center justify-center bg-white text-black transition-colors cursor-pointer pt-[1px]";
         
         if(isAudioPlaying) {
             soundDot.classList.replace('bg-black', 'bg-white');
         }
     }
     
-    if(trailCtx && width > 0) {
-        trailCtx.fillStyle = isLightMode ? '#ffffff' : '#000000';
-        trailCtx.fillRect(0, 0, width, height);
+    if(window.trailCtx && window.canvasWidth > 0) {
+        window.trailCtx.fillStyle = window.isLightMode ? '#ffffff' : '#000000';
+        window.trailCtx.fillRect(0, 0, window.canvasWidth, window.canvasHeight);
     }
-}
+};
 
 document.addEventListener('keydown', function(event) {
     if (event.key.toLowerCase() === 't') {
-        setMode(isLightMode ? 'B' : 'W');
+        window.setMode(window.isLightMode ? 'B' : 'W');
     }
     if (event.key === 'Escape') {
-        closePondModal();
+        window.closePondModal();
     }
 });
 
-// ============================================================
-//   KOI POND CANVAS LOGIC
-// ============================================================
 const canvas = document.getElementById('pond-canvas');
 const ctx = canvas.getContext('2d');
 const trailCanvas = document.createElement('canvas');
-const trailCtx = trailCanvas.getContext('2d');
-let width = 0, height = 0;
+window.trailCtx = trailCanvas.getContext('2d');
+window.canvasWidth = 0;
+window.canvasHeight = 0;
 
 function resizeCanvas() {
-    width = window.innerWidth || document.documentElement.clientWidth || 800;
-    height = window.innerHeight || document.documentElement.clientHeight || 600;
-    if (width <= 0) width = 800;
-    if (height <= 0) height = 600;
-    canvas.width = width;
-    canvas.height = height;
-    trailCanvas.width = width;
-    trailCanvas.height = height;
-    trailCtx.fillStyle = isLightMode ? '#ffffff' : '#000000';
-    trailCtx.fillRect(0, 0, width, height);
+    window.canvasWidth = window.innerWidth || document.documentElement.clientWidth || 800;
+    window.canvasHeight = window.innerHeight || document.documentElement.clientHeight || 600;
+    if (window.canvasWidth <= 0) window.canvasWidth = 800;
+    if (window.canvasHeight <= 0) window.canvasHeight = 600;
+    canvas.width = window.canvasWidth;
+    canvas.height = window.canvasHeight;
+    trailCanvas.width = window.canvasWidth;
+    trailCanvas.height = window.canvasHeight;
+    window.trailCtx.fillStyle = window.isLightMode ? '#ffffff' : '#000000';
+    window.trailCtx.fillRect(0, 0, window.canvasWidth, window.canvasHeight);
 }
 window.addEventListener('resize', resizeCanvas);
 setTimeout(resizeCanvas, 50);
@@ -494,48 +398,48 @@ canvas.addEventListener('mousemove', (e) => { if (Math.random() < 0.08) addRippl
 canvas.addEventListener('click', (e) => { addRipple(e.clientX, e.clientY, 100); });
 
 const kois = [
-    { x: Math.random() * width, y: Math.random() * height, angle: Math.random() * Math.PI * 2, speed: 0.8, color: 'rgba(217, 35, 35, 0.4)', isCreator: true },
-    { x: Math.random() * width, y: Math.random() * height, angle: Math.random() * Math.PI * 2, speed: 0.7, color: 'rgba(255, 255, 255, 0.15)', isCreator: true },
-    { x: Math.random() * width, y: Math.random() * height, angle: Math.random() * Math.PI * 2, speed: 0.9, color: 'rgba(0, 0, 0, 1)', isCreator: false },
-    { x: Math.random() * width, y: Math.random() * height, angle: Math.random() * Math.PI * 2, speed: 0.85, color: 'rgba(0, 0, 0, 1)', isCreator: false }
+    { x: Math.random() * 800, y: Math.random() * 600, angle: Math.random() * Math.PI * 2, speed: 0.8, color: 'rgba(217, 35, 35, 0.4)', isCreator: true },
+    { x: Math.random() * 800, y: Math.random() * 600, angle: Math.random() * Math.PI * 2, speed: 0.7, color: 'rgba(255, 255, 255, 0.15)', isCreator: true },
+    { x: Math.random() * 800, y: Math.random() * 600, angle: Math.random() * Math.PI * 2, speed: 0.9, color: 'rgba(0, 0, 0, 1)', isCreator: false },
+    { x: Math.random() * 800, y: Math.random() * 600, angle: Math.random() * Math.PI * 2, speed: 0.85, color: 'rgba(0, 0, 0, 1)', isCreator: false }
 ];
 
 function drawPond() {
-    if (width <= 0 || canvas.width <= 0 || trailCanvas.width <= 0) resizeCanvas();
+    if (window.canvasWidth <= 0 || canvas.width <= 0 || trailCanvas.width <= 0) resizeCanvas();
     if (canvas.width <= 0 || canvas.height <= 0 || trailCanvas.width <= 0 || trailCanvas.height <= 0) {
         requestAnimationFrame(drawPond);
         return;
     }
     
-    ctx.fillStyle = isLightMode ? '#ffffff' : '#000000';
-    ctx.fillRect(0, 0, width, height);
-    trailCtx.fillStyle = isLightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)';
-    trailCtx.fillRect(0, 0, width, height);
+    ctx.fillStyle = window.isLightMode ? '#ffffff' : '#000000';
+    ctx.fillRect(0, 0, window.canvasWidth, window.canvasHeight);
+    window.trailCtx.fillStyle = window.isLightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)';
+    window.trailCtx.fillRect(0, 0, window.canvasWidth, window.canvasHeight);
 
     kois.forEach(k => {
         k.angle += (Math.random() - 0.5) * 0.035;
         k.x += Math.cos(k.angle) * k.speed;
         k.y += Math.sin(k.angle) * k.speed;
-        if (k.x < -60) k.x = width + 60;
-        if (k.x > width + 60) k.x = -60;
-        if (k.y < -60) k.y = height + 60;
-        if (k.y > height + 60) k.y = -60;
+        if (k.x < -60) k.x = window.canvasWidth + 60;
+        if (k.x > window.canvasWidth + 60) k.x = -60;
+        if (k.y < -60) k.y = window.canvasHeight + 60;
+        if (k.y > window.canvasHeight + 60) k.y = -60;
 
-        trailCtx.save();
-        trailCtx.beginPath();
-        trailCtx.arc(k.x, k.y, 1.8, 0, Math.PI * 2);
+        window.trailCtx.save();
+        window.trailCtx.beginPath();
+        window.trailCtx.arc(k.x, k.y, 1.8, 0, Math.PI * 2);
         
-        if (isLightMode && !k.isCreator) {
-             trailCtx.fillStyle = 'rgba(200, 200, 200, 1)';
-             trailCtx.shadowColor = 'rgba(200, 200, 200, 1)';
+        if (window.isLightMode && !k.isCreator) {
+             window.trailCtx.fillStyle = 'rgba(200, 200, 200, 1)';
+             window.trailCtx.shadowColor = 'rgba(200, 200, 200, 1)';
         } else {
-             trailCtx.fillStyle = k.color;
-             trailCtx.shadowColor = k.color;
+             window.trailCtx.fillStyle = k.color;
+             window.trailCtx.shadowColor = k.color;
         }
         
-        trailCtx.shadowBlur = 4;
-        trailCtx.fill();
-        trailCtx.restore();
+        window.trailCtx.shadowBlur = 4;
+        window.trailCtx.fill();
+        window.trailCtx.restore();
 
         ctx.save();
         ctx.translate(k.x, k.y);
@@ -547,8 +451,8 @@ function drawPond() {
         ctx.moveTo(-12, 0);
         ctx.quadraticCurveTo(-18, 4, -22, 2);
         
-        let colorBase = k.color.includes('217') ? 'rgba(241, 18, 10, 0.7)' : (isLightMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)');
-        let colorOther = isLightMode ? 'rgba(200, 200, 200, 0.6)' : 'rgba(80, 80, 80, 0.6)';
+        let colorBase = k.color.includes('217') ? 'rgba(241, 18, 10, 0.7)' : (window.isLightMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)');
+        let colorOther = window.isLightMode ? 'rgba(200, 200, 200, 0.6)' : 'rgba(80, 80, 80, 0.6)';
         ctx.strokeStyle = k.isCreator ? colorBase : colorOther;
         
         ctx.lineWidth = 1.2;
@@ -573,21 +477,20 @@ function drawPond() {
 }
 window.onload = function() { setTimeout(drawPond, 100); };
 
-// ============================================================
-//   MODAL DATA 
-// ============================================================
 window.localMantraSessionCount = 0; 
-window.globalCount = 0; 
+window.globalCount = 0;
+window.totalUnsynced = 0;
 window.autoPaceInterval = null;
 window.currentCPM = 40;
+window.isClosingModal = false;
 
-const modalData = {
+window.modalData = {
     ceremonies: {
         title: "CEREMONIES",
         body: `
         <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
             <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">CEREMONIES</span>
-            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
                 × CLOSE [ESC]
             </button>
         </div>
@@ -605,19 +508,15 @@ const modalData = {
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
                     <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] JO-BUTSU Ceremony</span>
-                    <div class="flex gap-6"><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">▶ WATCH</span><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">✦ LISTEN</span></div>
                 </div>
-                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
                     <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] GANTAN CEREMONY</span>
-                    <div class="flex gap-6"><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">▶ WATCH</span><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">✦ LISTEN</span></div>
                 </div>
-                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
                     <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] HOU-ON-KOU CEREMONY</span>
-                    <div class="flex gap-6"><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">▶ WATCH</span><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">✦ LISTEN</span></div>
                 </div>
-                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
                     <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] NEHAN-E CEREMONY</span>
-                    <div class="flex gap-6"><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">▶ WATCH</span><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">✦ LISTEN</span></div>
                 </div>
             </div>
         </div>`
@@ -627,7 +526,7 @@ const modalData = {
         body: `
         <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
             <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">LECTURES</span>
-            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
                 × CLOSE [ESC]
             </button>
         </div>
@@ -650,14 +549,14 @@ const modalData = {
                         <a href="https://drive.google.com/open?id=1lToc-6-5fHGZGJohHjxI9GOVUfz0O9o7&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
                     </div>
                 </div>
-                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
                     <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 11, 2026</span>
                     <div class="flex gap-6">
                         <a href="https://drive.google.com/open?id=1zjEkLWz5_9dWrbq_vuzRaGW2BHoDsOvP&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
                         <a href="https://drive.google.com/open?id=16eSuMM7BjsKS4BgK94c7lBinFxh3jAPL&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
                     </div>
                 </div>
-                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
                     <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 18, 2026</span>
                     <div class="flex gap-6">
                         <a href="https://drive.google.com/open?id=1uVrw7K5EBFNhVsQaHhdcK_joqMjHH9_G&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
@@ -672,7 +571,7 @@ const modalData = {
         body: `
         <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
             <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">MANTRAS</span>
-            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
                 × CLOSE [ESC]
             </button>
         </div>
@@ -702,7 +601,7 @@ const modalData = {
                         <a href="https://drive.google.com/open?id=1n-UrEnxMpt7dNLZ2HNHzY9j_aucxSmn0&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
                     </div>
                 </div>
-                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
                     <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 20, 2026</span>
                     <div class="flex gap-6">
                         <a href="https://drive.google.com/open?id=1kVS04hCAg7BMO1lShj6vpcN2cix0yuR5&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
@@ -715,15 +614,13 @@ const modalData = {
     million_mantras: {
         title: "THE MILLION MANTRAS",
         body: `
-        <!-- Custom Header inside the box structure -->
         <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
             <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">THE MILLION MANTRAS</span>
-            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
                 × CLOSE [ESC]
             </button>
         </div>
 
-        <!-- Top Info Row -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end p-6 sm:p-8 border-b box-border-sync gap-8">
             <div class="flex flex-col max-w-2xl gap-3">
                 <span class="font-inter font-light text-[13px] sm:text-sm tracking-wide inv-text leading-relaxed">The One Million Mantras is Furaibo’s annual gathering dedicated to the sustained, collective recitation of Namu Amida Butsu.</span>
@@ -735,15 +632,12 @@ const modalData = {
             </div>
         </div>
 
-        <!-- Inner Gadget Box -->
-        <div class="p-6 sm:p-8">
+        <div class="p-6 sm:p-8 relative overflow-hidden">
             <div class="w-full border box-border-sync p-6 sm:p-12 flex flex-col items-center relative">
-                
                 <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] absolute top-6 uppercase tag-invert px-2 py-0.5">WHEREVER YOU ARE, ENTER THE PRACTICE WITH US.</span>
 
-                <!-- Circular Button -->
                 <div class="relative w-40 h-40 sm:w-48 sm:h-48 mt-12 mb-10 flex items-center justify-center">
-                    <button id="mantra-btn" onpointerdown="triggerMantraClick(event)" class="absolute z-10 w-full h-full rounded-full border border-white box-border-sync flex flex-col items-center justify-center bg-transparent outline-none transition-transform duration-75 hover:bg-white/5 active:scale-95">
+                    <button id="mantra-btn" onpointerdown="window.triggerMantraClick(event)" class="absolute z-10 w-full h-full rounded-full border border-white box-border-sync flex flex-col items-center justify-center bg-transparent outline-none transition-transform duration-75 hover:bg-white/5 active:scale-95">
                         <div class="w-4 h-4 rounded-full border-2 border-white box-border-sync flex items-center justify-center mb-2">
                             <div class="w-1.5 h-1.5 rounded-full bg-white dot-invert"></div>
                         </div>
@@ -753,32 +647,53 @@ const modalData = {
                     <div id="ripple-container" class="absolute inset-0 pointer-events-none rounded-full"></div>
                 </div>
 
-                <!-- Session Counter -->
                 <div class="flex flex-col items-center mb-10">
                     <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase mb-2">YOUR SESSION RECITATIONS</span>
                     <div class="flex items-center gap-4">
                         <span class="font-mono text-4xl sm:text-5xl inv-text tracking-widest" id="local-session-counter">00000</span>
-                        <button id="sync-btn" onclick="addToGlobal(event)" class="font-mono text-[9px] tracking-widest border border-[#222] box-border-sync px-2 py-1 box-btn-sync transition-colors uppercase" title="Add to Aggregate Count">
+                        <button id="sync-btn" onclick="window.quickSync()" class="font-mono text-[9px] tracking-widest border border-[#222] box-border-sync px-2 py-1 box-btn-sync transition-colors uppercase" title="Add to Aggregate Count">
                             + SYNC
                         </button>
                     </div>
                 </div>
 
-                <!-- Control Panel -->
                 <div class="w-full max-w-md border-t border-dashed border-[#555] pt-6 flex flex-col gap-6">
                     <div class="flex justify-between items-center w-full">
                         <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase">TEMPO PACE</span>
                         <span class="font-mono text-[10px] tracking-widest inv-text font-bold" id="cpm-display">40 CPM</span>
                     </div>
                     
-                    <input type="range" id="tempo-slider" min="40" max="150" value="40" oninput="updateTempo(this.value)">
+                    <input type="range" id="tempo-slider" min="40" max="150" value="40" oninput="window.updateTempo(this.value)">
                     
                     <div class="flex justify-between items-center w-full">
                         <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase">40 SLOW • 150 FAST</span>
-                        <button id="auto-btn" onclick="toggleAutoPace()" class="font-mono text-[10px] tracking-widest border border-[#222] box-border-sync px-4 py-2 box-btn-sync transition-colors uppercase">
+                        <button id="auto-btn" onclick="window.toggleAutoPace()" class="font-mono text-[10px] tracking-widest border border-[#222] box-border-sync px-4 py-2 box-btn-sync transition-colors uppercase">
                             START AUTO-PACE
                         </button>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Registration Overlay inside the module -->
+            <div id="registration-overlay" class="absolute inset-0 bg-black/90 backdrop-blur-md z-20 hidden flex-col items-center justify-center p-8 transition-opacity duration-300">
+                <button onclick="window.cancelRegistration()" class="absolute top-8 right-8 font-mono text-[10px] text-[#888] hover:text-white uppercase transition-colors">× CANCEL</button>
+                <h3 class="font-mono text-[12px] tracking-widest inv-text uppercase mb-6 text-center">REGISTER YOUR SESSION</h3>
+                <p class="font-inter text-xs text-[#888] text-center max-w-md mb-8">
+                    You are about to sync <span class="inv-text font-bold" id="overlay-session-count">0</span> recitations globally. Would you like to leave your name and location in the permanent archive?
+                </p>
+                <div class="w-full max-w-sm flex flex-col gap-4">
+                    <input type="text" id="reg-name" placeholder="NAME / INITIATIVE (OPTIONAL)" class="w-full bg-transparent border-b box-border-sync inv-text px-2 py-2 outline-none font-mono tracking-widest text-[10px] placeholder:text-[#555]" />
+                    <input type="text" id="reg-location" placeholder="CITY / COUNTRY (OPTIONAL)" class="w-full bg-transparent border-b box-border-sync inv-text px-2 py-2 outline-none font-mono tracking-widest text-[10px] placeholder:text-[#555]" />
+                    
+                    <div class="flex justify-between mt-6">
+                        <button onclick="window.submitSync(false)" class="font-mono text-[10px] tracking-widest text-[#555] hover:text-white transition-colors uppercase py-2">
+                            SKIP (ANONYMOUS)
+                        </button>
+                        <button onclick="window.submitSync(true)" class="bg-white text-black px-6 py-2 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors uppercase">
+                            SYNC WITH NAME
+                        </button>
+                    </div>
+                    <span id="reg-msg" class="text-center font-mono text-[9px] tracking-widest text-[#555] mt-2 h-4"></span>
                 </div>
             </div>
         </div>`
@@ -788,7 +703,7 @@ const modalData = {
         body: `
         <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
             <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">FURAIBO BUENOS AIRES</span>
-            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
                 × CLOSE [ESC]
             </button>
         </div>
@@ -804,7 +719,7 @@ const modalData = {
                 </div>
             </div>
             <div class="flex justify-center md:justify-end">
-                <img src="assets/images/CLEAN_Furaibo_full_text-upscaled.png" alt="Furaibo Demon Logo" class="w-full max-w-[250px] md:max-w-[300px] object-contain" onerror="this.outerHTML='<div class=\\'w-48 h-64 border border-zinc-800 flex items-center justify-center text-xs text-zinc-600\\'>FURAIBO LOGO</div>'" />
+                <img src="assets/images/CLEAN_Furaibo_full_text-upscaled.png" alt="Furaibo Demon Logo" class="w-full max-w-[250px] md:max-w-[300px] object-contain" onerror="this.outerHTML='<div class=\'w-48 h-64 border border-zinc-800 flex items-center justify-center text-xs text-zinc-600\'>FURAIBO LOGO</div>'" />
             </div>
         </div>`
     },
@@ -813,7 +728,7 @@ const modalData = {
         body: `
         <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
             <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">DOCUMENTARY</span>
-            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+            <button onclick="window.closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
                 × CLOSE [ESC]
             </button>
         </div>
@@ -823,11 +738,9 @@ const modalData = {
             </p>
             <div class="pt-6 border-t box-border-sync">
                 <p class="font-mono text-[10px] tracking-widest text-[#888] mb-12 uppercase">[ IN PRODUCTION ]</p>
-                
-                <!-- Email Signup -->
                 <div class="w-full max-w-md">
                     <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase block mb-3">RECEIVE PRODUCTION UPDATES</span>
-                    <form id="doc-email-form" onsubmit="submitEmail(event)" class="flex w-full border box-border-sync">
+                    <form id="doc-email-form" onsubmit="window.submitEmail(event)" class="flex w-full border box-border-sync">
                         <input type="email" id="doc-email-input" placeholder="RECIPIENT EMAIL" required class="flex-1 bg-transparent inv-text px-4 py-3 outline-none placeholder:text-[#555] font-mono tracking-widest text-[10px]" />
                         <button type="submit" id="doc-email-btn" class="bg-white text-black px-6 py-3 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors">ENTER</button>
                     </form>
@@ -838,26 +751,36 @@ const modalData = {
     }
 };
 
-function openPondModal(key, event) {
+window.openPondModal = function(key, event) {
     if (event) event.stopPropagation();
     const modal = document.getElementById("pond-modal");
     const container = document.getElementById("modal-content-container");
-    const data = modalData[key];
+    const data = window.modalData[key];
     if (!data) return;
     
-    // Inject the selected body which now includes the headers internally
     container.innerHTML = data.body;
-    
     modal.classList.remove("hidden");
     modal.classList.add("flex");
     
     if (key === 'million_mantras') {
-        updateLocalCounterDisplay();
+        window.updateLocalCounterDisplay();
         document.getElementById('global-tally').innerText = window.globalCount.toLocaleString();
+        window.fetchLiveCount();
     }
-}
+};
 
-function closePondModal() {
+window.closePondModal = function() {
+    const modal = document.getElementById("pond-modal");
+    // Intercept closing only if there are unsynced recitations
+    if (window.totalUnsynced > 0 && modal.querySelector('#registration-overlay')) {
+        window.isClosingModal = true;
+        window.openRegistrationOverlay();
+        return; 
+    }
+    window.forceCloseModal();
+};
+
+window.forceCloseModal = function() {
     const modal = document.getElementById("pond-modal");
     modal.classList.add("hidden");
     modal.classList.remove("flex");
@@ -865,27 +788,24 @@ function closePondModal() {
         clearInterval(window.autoPaceInterval);
         window.autoPaceInterval = null;
         
-        // Reset the Auto-Pace button text visually
         const btn = document.getElementById('auto-btn');
         if (btn) {
             btn.innerText = "START AUTO-PACE";
             btn.classList.remove('bg-white', 'text-black', 'bg-black', 'text-white');
         }
     }
-}
+    window.localMantraSessionCount = 0;
+    window.totalUnsynced = 0;
+};
 
-// --- Tactile Gadget Logic ---
-
-// We create an audio element specifically for the chant to clone it rapidly
 const namandaAudioTemplate = new Audio("assets/audio/NAMANDA.wav");
 namandaAudioTemplate.preload = "auto";
 
-function triggerMantraClick(event) {
+window.triggerMantraClick = function(event) {
     try {
-        // Cloning allows overlapping playback even at fast tempos
         const chantAudio = namandaAudioTemplate.cloneNode();
         chantAudio.volume = 1.0;
-        chantAudio.play().catch(e => console.log("Audio block:", e));
+        chantAudio.play().catch(e => console.log("Audio trigger:", e));
     } catch(e) {}
 
     const container = document.getElementById('ripple-container');
@@ -908,24 +828,25 @@ function triggerMantraClick(event) {
     }
 
     window.localMantraSessionCount++;
-    updateLocalCounterDisplay();
-}
+    window.totalUnsynced++;
+    window.updateLocalCounterDisplay();
+};
 
-function updateLocalCounterDisplay() {
+window.updateLocalCounterDisplay = function() {
     const display = document.getElementById("local-session-counter");
     if (display) {
         display.innerText = window.localMantraSessionCount.toString().padStart(5, '0');
     }
-}
+};
 
-function addToGlobal(event) {
-    if(window.localMantraSessionCount > 0) {
-        let addedCount = window.localMantraSessionCount;
-        window.globalCount += addedCount;
-        window.localMantraSessionCount = 0;
+window.quickSync = function() {
+    if (window.localMantraSessionCount > 0) {
+        window.globalCount += window.localMantraSessionCount;
+        const tally = document.getElementById('global-tally');
+        if (tally) tally.innerText = window.globalCount.toLocaleString();
         
-        updateLocalCounterDisplay();
-        document.getElementById('global-tally').innerText = window.globalCount.toLocaleString();
+        window.localMantraSessionCount = 0;
+        window.updateLocalCounterDisplay();
         
         const btn = document.getElementById('sync-btn');
         if(btn) {
@@ -933,85 +854,173 @@ function addToGlobal(event) {
             btn.innerHTML = "SYNCED ✓";
             setTimeout(() => { btn.innerHTML = originalText; }, 1500);
         }
-        
-        // Trigger the Firebase write function if it exists
-        if (typeof window.syncToFirebase === 'function') {
-            window.syncToFirebase(addedCount);
-        }
     }
-}
+};
 
-function updateTempo(val) {
-    window.currentCPM = val;
-    document.getElementById('cpm-display').innerText = `${val} CPM`;
+window.openRegistrationOverlay = function() {
+    if(window.totalUnsynced <= 0) return;
+    const overlay = document.getElementById('registration-overlay');
+    if (overlay) {
+        document.getElementById('overlay-session-count').innerText = window.totalUnsynced;
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+    }
+};
+
+window.cancelRegistration = function() {
+    const overlay = document.getElementById('registration-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+    }
+    window.isClosingModal = false;
+};
+
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzEZLxQUQ6FSAMRORezThPJZJcsFeDjY5gKuuHrQEbDvLqcoIDmGY1W2MjMCrD55N7Nhg/exec';
+
+window.submitSync = function(includeData) {
+    const msg = document.getElementById('reg-msg');
+    let nameInput = "Anonymous";
+    let locInput = "Unknown";
+
+    if(includeData) {
+        nameInput = document.getElementById('reg-name').value.trim() || "Anonymous";
+        locInput = document.getElementById('reg-location').value.trim() || "Unknown";
+    }
+
+    msg.innerText = "SYNCING TO ARCHIVE...";
+    msg.classList.replace('text-[#555]', 'inv-text');
     
+    const countToAdd = window.totalUnsynced;
+    const arTime = new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"});
+
+    fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            'action': 'sync_mantras',
+            'amount': countToAdd,
+            'name': nameInput,
+            'location': locInput,
+            'timestamp': arTime
+        })
+    }).then(() => {
+        msg.innerText = "SYNC COMPLETE.";
+        setTimeout(() => { window.finishSyncFlow(); }, 1000);
+    }).catch(() => {
+        msg.innerText = "SYNCED OFFLINE.";
+        setTimeout(() => { window.finishSyncFlow(); }, 1000);
+    });
+};
+
+window.finishSyncFlow = function() {
+    const overlay = document.getElementById('registration-overlay');
+    if(overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+    }
+    document.getElementById('reg-name').value = "";
+    document.getElementById('reg-location').value = "";
+    const msg = document.getElementById('reg-msg');
+    if(msg) {
+        msg.innerText = "";
+        msg.classList.replace('inv-text', 'text-[#555]');
+    }
+    
+    window.localMantraSessionCount = 0;
+    window.totalUnsynced = 0;
+    
+    if (window.isClosingModal) {
+        window.forceCloseModal();
+    }
+};
+
+window.updateTempo = function(val) {
+    window.currentCPM = val;
+    const display = document.getElementById('cpm-display');
+    if (display) display.innerText = `${val} CPM`;
     if (window.autoPaceInterval) {
         clearInterval(window.autoPaceInterval);
-        startAutoPaceLoop();
+        window.startAutoPaceLoop();
     }
-}
+};
 
-function toggleAutoPace() {
+window.toggleAutoPace = function() {
     const btn = document.getElementById('auto-btn');
     if (window.autoPaceInterval) {
         clearInterval(window.autoPaceInterval);
         window.autoPaceInterval = null;
-        btn.innerText = "START AUTO-PACE";
-        
-        // Handle visual classes based on mode
-        btn.classList.remove('bg-white', 'text-black');
-        if(document.body.classList.contains('light')) {
-             btn.classList.remove('bg-black', 'text-white');
+        if (btn) {
+            btn.innerText = "START AUTO-PACE";
+            btn.classList.remove('bg-white', 'text-black', 'bg-black', 'text-white');
         }
     } else {
-        startAutoPaceLoop();
-        btn.innerText = "STOP AUTO-PACE";
-        
-        // Handle visual classes based on mode
-        if(document.body.classList.contains('light')) {
-             btn.classList.add('bg-black', 'text-white');
-        } else {
-             btn.classList.add('bg-white', 'text-black');
+        window.startAutoPaceLoop();
+        if (btn) {
+            btn.innerText = "STOP AUTO-PACE";
+            if(window.isLightMode) {
+                btn.classList.add('bg-black', 'text-white');
+            } else {
+                btn.classList.add('bg-white', 'text-black');
+            }
         }
     }
-}
+};
 
-function startAutoPaceLoop() {
+window.startAutoPaceLoop = function() {
     const msPerClick = (60 / window.currentCPM) * 1000;
     window.autoPaceInterval = setInterval(() => {
         const btn = document.getElementById('mantra-btn');
         if(btn) {
             btn.style.transform = "scale(0.95)";
             setTimeout(() => btn.style.transform = "scale(1)", 100);
-            triggerMantraClick(null);
+            window.triggerMantraClick(null);
         }
     }, msPerClick);
-}
+};
 
-// --- Email Submission Logic ---
-function submitEmail(e) {
+window.fetchLiveCount = function() {
+    fetch(SHEET_URL + "?action=get_count&t=" + new Date().getTime(), { 
+        method: 'GET'
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+    })
+    .then(data => {
+        if(data && data.count !== undefined) {
+            window.globalCount = data.count;
+            const display = document.getElementById('global-tally');
+            if(display) display.innerText = window.globalCount.toLocaleString();
+        }
+    })
+    .catch(err => {
+        console.error("Fetch count:", err);
+    });
+};
+
+window.fetchLiveCount();
+
+window.submitEmail = function(e) {
     e.preventDefault();
-    
     const input = document.getElementById('doc-email-input');
     const btn = document.getElementById('doc-email-btn');
     const msg = document.getElementById('doc-email-msg');
     const email = input.value.trim();
-    
     if(!email) return;
 
     btn.innerText = "WAIT...";
     btn.disabled = true;
 
-    // Generates the exact time in Argentina
     const arTime = new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"});
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx2AD44Pq9WqouwGnEu0RFjOEBiV5Z7-ytJiauGLQ9XMEKHY44Kx_f9EEGkVadovyzDVQ/exec';
-
-    fetch(scriptURL, { 
+    fetch(SHEET_URL, { 
         method: 'POST', 
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
+            'action': 'email_signup',
             'email': email,
             'timestamp': arTime
         })
@@ -1029,83 +1038,7 @@ function submitEmail(e) {
         btn.innerText = "ENTER";
         btn.disabled = false;
     });
-}
-</script>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'furaibo-app';
-    let db, auth;
-
-    try {
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        if (Object.keys(firebaseConfig).length > 0) {
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-
-            const initAuth = async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    if (auth.currentUser) {
-                        setupGlobalCounter(db, appId);
-                    }
-                } catch (e) {
-                    console.error("Auth error:", e);
-                }
-            };
-
-            function setupGlobalCounter(db, appId) {
-                const tallyRef = doc(db, 'artifacts', appId, 'public', 'data', 'mantras', 'global_tally');
-                
-                // Realtime listen starting from 0 if empty
-                onSnapshot(tallyRef, (snapshot) => {
-                    if (snapshot.exists()) {
-                        window.globalCount = snapshot.data().count || 0;
-                    } else {
-                        setDoc(tallyRef, { count: 0 }); // START AT ZERO
-                        window.globalCount = 0;
-                    }
-                    const display = document.getElementById('global-tally');
-                    if (display) display.innerText = window.globalCount.toLocaleString();
-                }, (error) => {
-                    console.error("Snapshot error:", error);
-                });
-
-                // Attach the sync function to window so standard script can call it
-                window.syncToFirebase = async (addedCount) => {
-                    if (db && auth && auth.currentUser) {
-                        try {
-                            const snap = await getDoc(tallyRef);
-                            if (snap.exists()) {
-                                await updateDoc(tallyRef, { count: snap.data().count + addedCount });
-                            } else {
-                                await setDoc(tallyRef, { count: addedCount });
-                            }
-                        } catch (e) {
-                            console.error("Sync error:", e);
-                        }
-                    }
-                };
-            }
-
-            initAuth();
-        }
-    } catch(e) {
-        console.error("Firebase setup skipped.", e);
-    }
+};
 </script>
 </body>
 </html>
-"""
-
-with open('version9.html', 'w') as f:
-    f.write(html_content)
-}
-}
