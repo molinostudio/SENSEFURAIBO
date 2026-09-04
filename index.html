@@ -151,12 +151,12 @@
 <canvas id="pond-canvas"></canvas>
 
 <!-- ==========================================================
-     POND ICONS (WITH ADDED DOCUMENTARY & CORRECTED LECTURES)
+     POND ICONS (WIDELY SCATTERED LAYOUT)
 =========================================================== -->
 <div id="pond-elements-layer" class="fixed inset-0 w-full h-full pointer-events-none z-20 overflow-hidden mix-blend-difference transition-colors duration-400">
     
     <!-- 1. CEREMONIES (Enso) -->
-    <div onclick="openPondModal('ceremonies', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="top:45%; left:18%;">
+    <div onclick="openPondModal('ceremonies', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="top:30%; left:12%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 sm:w-20 sm:h-20 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -177,7 +177,7 @@
     </div>
 
     <!-- 2. LECTURES (Mala Beads) -->
-    <div onclick="openPondModal('lectures', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="top:50%; right:18%;">
+    <div onclick="openPondModal('lectures', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="top:45%; right:15%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 120" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -190,7 +190,7 @@
     </div>
 
     <!-- 3. MANTRAS (Concentric Circles) -->
-    <div onclick="openPondModal('mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="bottom:25%; left:45%;">
+    <div onclick="openPondModal('mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="top:50%; left:42%;">
         <div class="relative flex flex-col items-center">
             <div class="w-14 h-14 sm:w-16 sm:h-16 relative transition-transform duration-700 transform group-hover:scale-110">
                  <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -203,7 +203,7 @@
     </div>
 
     <!-- 4. THE MILLION MANTRAS -->
-    <div onclick="openPondModal('million_mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="bottom:12%; right:30%;">
+    <div onclick="openPondModal('million_mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="bottom:20%; right:30%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 120" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -215,7 +215,7 @@
     </div>
 
     <!-- 5. FURAIBO BUENOS AIRES -->
-    <div onclick="openPondModal('sanctuary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="bottom:10%; left:20%;">
+    <div onclick="openPondModal('sanctuary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="bottom:15%; left:20%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -225,9 +225,9 @@
             <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">FURAIBO BUENOS AIRES</span>
         </div>
     </div>
-
+    
     <!-- 6. DOCUMENTARY (Movie Slate) -->
-    <div onclick="openPondModal('documentary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="top:70%; right:22%;">
+    <div onclick="openPondModal('documentary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="bottom:12%; right:12%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 sm:w-20 sm:h-20 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -242,6 +242,7 @@
         </div>
     </div>
     
+    <!-- FOOTER -->
     <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-[#555] font-mono text-[9px] tracking-[0.4em] uppercase pointer-events-none whitespace-nowrap z-40 transition-colors">
         POWERED MOLINO STUDIO & FURAIBO BUENOS AIRES
     </div>
@@ -745,10 +746,11 @@ const modalData = {
                 <!-- Email Signup -->
                 <div class="w-full max-w-md">
                     <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase block mb-3">RECEIVE PRODUCTION UPDATES</span>
-                    <form onsubmit="event.preventDefault(); alert('Subscribed');" class="flex w-full border box-border-sync">
-                        <input type="email" placeholder="RECIPIENT EMAIL" required class="flex-1 bg-transparent inv-text px-4 py-3 outline-none placeholder:text-[#555] font-mono tracking-widest text-[10px]" />
-                        <button type="submit" class="bg-white text-black px-6 py-3 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors">ENTER</button>
+                    <form onsubmit="submitEmail(event)" class="flex w-full border box-border-sync">
+                        <input type="email" id="doc-email-input" placeholder="RECIPIENT EMAIL" required class="flex-1 bg-transparent inv-text px-4 py-3 outline-none placeholder:text-[#555] font-mono tracking-widest text-[10px]" />
+                        <button type="submit" id="doc-email-btn" class="bg-white text-black px-6 py-3 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors">ENTER</button>
                     </form>
+                    <span id="doc-email-msg" class="text-[#888] font-mono text-[9px] tracking-widest mt-3 block h-4"></span>
                 </div>
             </div>
         </div>`
@@ -885,6 +887,46 @@ function startAutoPaceLoop() {
     }, msPerClick);
 }
 
+// --- Email Submission Logic ---
+function submitEmail(e) {
+    e.preventDefault();
+    
+    const input = document.getElementById('doc-email-input');
+    const btn = document.getElementById('doc-email-btn');
+    const msg = document.getElementById('doc-email-msg');
+    const email = input.value.trim();
+    
+    if(!email) return;
+
+    btn.innerText = "WAIT...";
+    btn.disabled = true;
+
+    const arTime = new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"});
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx2AD44Pq9WqouwGnEu0RFjOEBiV5Z7-ytJiauGLQ9XMEKHY44Kx_f9EEGkVadovyzDVQ/exec';
+
+    fetch(scriptURL, { 
+        method: 'POST', 
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            'email': email,
+            'timestamp': arTime
+        })
+    })
+    .then(() => {
+        msg.innerText = "EMAIL SECURED. WE WILL BE IN TOUCH.";
+        msg.classList.replace('text-[#888]', 'inv-text');
+        input.value = "";
+        btn.innerText = "ENTER";
+        btn.disabled = false;
+        setTimeout(() => { msg.innerText = ""; msg.classList.replace('inv-text', 'text-[#888]'); }, 4000);
+    })
+    .catch(error => {
+        msg.innerText = "ERROR SAVING. PLEASE TRY AGAIN.";
+        btn.innerText = "ENTER";
+        btn.disabled = false;
+    });
+}
 </script>
 </body>
 </html>
