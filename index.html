@@ -1018,22 +1018,40 @@ window.startAutoPaceLoop = function() {
 };
 
 window.fetchLiveCount = function() {
-    fetch(SHEET_URL + "?action=get_count&t=" + new Date().getTime(), { 
-        method: 'GET'
+    // Attempt local storage restore first so tally is never blank
+    try {
+        const cached = localStorage.getItem('furaibo_global_count');
+        if (cached && !window.globalCount) {
+            window.globalCount = parseInt(cached, 10) || 0;
+            const display = document.getElementById('global-tally');
+            if (display) display.innerText = window.globalCount.toLocaleString();
+        }
+    } catch(e) {}
+
+    // Fetch with redirect follow for Google Apps Script 302 handling
+    fetch(SHEET_URL + "?action=get_count&t=" + Date.now(), { 
+        method: 'GET',
+        redirect: 'follow',
+        cache: 'no-store'
     })
     .then(res => {
-        if (!res.ok) throw new Error("Network response was not ok");
+        if (!res.ok) {
+            return null;
+        }
         return res.json();
     })
     .then(data => {
-        if(data && data.count !== undefined) {
-            window.globalCount = data.count;
+        if (data && typeof data.count !== 'undefined') {
+            window.globalCount = Number(data.count) || 0;
+            try {
+                localStorage.setItem('furaibo_global_count', window.globalCount);
+            } catch(e) {}
             const display = document.getElementById('global-tally');
-            if(display) display.innerText = window.globalCount.toLocaleString();
+            if (display) display.innerText = window.globalCount.toLocaleString();
         }
     })
     .catch(err => {
-        console.error("Fetch count:", err);
+        // Gracefully keep current count without throwing loud console errors
     });
 };
 
