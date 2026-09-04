@@ -69,7 +69,7 @@
         .hover\:text-red-500:hover { color: var(--furaibo-red) !important; }
         
         /* Buttons */
-        .btn-ui { border: 1px solid rgba(255,255,255,0.2); background: transparent; transition: all 0.2s; }
+        .btn-ui { border: 1px solid rgba(255,255,255,0.2); background: transparent; transition: all 0.2s; border-radius: 2px;}
         body.light .btn-ui { border: 1px solid rgba(0,0,0,0.2); background: transparent; }
 
         /* -------------------------------------------------------
@@ -111,33 +111,33 @@
 <body class="dark">
 
 <!-- ==========================================================
-     GLOBAL HEADER (NO DIVIDING LINE, TIGHTER PADDING)
+     GLOBAL HEADER (IDENTICAL BUTTON HEIGHTS & SCALED SEAL)
 =========================================================== -->
 <header class="fixed top-0 left-0 w-full z-40 p-4 sm:px-6 flex justify-between items-center pointer-events-none mix-blend-difference transition-colors duration-400">
-    <!-- LEFT: ICON ONLY -->
+    <!-- LEFT: ICON ONLY (Scaled to 2x size: w-12 h-12) -->
     <div class="flex items-center pointer-events-auto">
-        <img src="assets/images/BlancoSello_Transparente.png" alt="Furaibo Seal" class="w-6 h-6 object-contain" onerror="this.outerHTML='<div class=\\'w-6 h-6 border border-white inv-text font-mono text-[8px] flex items-center justify-center\\'>SEAL</div>'" />
+        <img src="assets/images/BlancoSello_Transparente.png" alt="Furaibo Seal" class="w-12 h-12 object-contain" onerror="this.outerHTML='<div class=\\'w-12 h-12 border border-white inv-text font-mono text-[10px] flex items-center justify-center\\'>SEAL</div>'" />
     </div>
     
-    <!-- RIGHT: MECHANICAL SWITCHES (TIGHTER PADDING) -->
+    <!-- RIGHT: MECHANICAL SWITCHES (Exactly matched heights) -->
     <div class="pointer-events-auto flex items-center gap-2">
-        <!-- SOUND TOGGLE -->
-        <button id="sound-btn" onclick="toggleAudio()" class="btn-ui flex items-center gap-1.5 px-1.5 py-0.5 font-mono text-[9px] tracking-widest uppercase">
+        <!-- SOUND TOGGLE (Height exactly h-7) -->
+        <button id="sound-btn" onclick="toggleAudio()" class="btn-ui flex items-center justify-center gap-1.5 h-7 px-2 font-mono text-[10px] tracking-widest uppercase">
             <div id="sound-dot" class="w-1.5 h-1.5 rounded-full bg-[#555] transition-colors"></div>
-            <span id="sound-text" class="inv-text-muted transition-colors leading-none">MUTED</span>
+            <span id="sound-text" class="inv-text-muted transition-colors leading-none pt-[1px]">MUTED</span>
         </button>
 
-        <!-- W/B TOGGLE -->
-        <div id="wb-toggle" class="btn-ui flex items-center p-0.5 font-mono text-[10px] tracking-widest select-none leading-none">
-            <div id="btn-w" onclick="setMode('W')" class="px-1 py-0.5 text-[#888] hover:text-white transition-colors cursor-pointer">W</div>
-            <span class="text-[#555] mx-0.5">/</span>
-            <div id="btn-b" onclick="setMode('B')" class="px-1 py-0.5 bg-white text-black transition-colors cursor-pointer">B</div>
+        <!-- W/B TOGGLE (Height exactly h-7) -->
+        <div id="wb-toggle" class="btn-ui flex items-center justify-center h-7 px-1 font-mono text-[10px] tracking-widest select-none">
+            <div id="btn-w" onclick="setMode('W')" class="h-full px-1.5 flex items-center justify-center text-[#888] hover:text-white transition-colors cursor-pointer pt-[1px]">W</div>
+            <span class="text-[#555] flex items-center justify-center h-full pt-[1px]">/</span>
+            <div id="btn-b" onclick="setMode('B')" class="h-full px-1.5 flex items-center justify-center bg-white text-black transition-colors cursor-pointer pt-[1px]">B</div>
         </div>
     </div>
 </header>
 
 <!-- ==========================================================
-     CENTERED PERSISTENT HEADER (MOVED UP FLUSH WITH HEADER)
+     CENTERED PERSISTENT HEADER
 =========================================================== -->
 <div class="fixed top-[64px] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center text-center pointer-events-none w-full mix-blend-difference px-4 transition-colors duration-400">
     <h2 class="font-mono text-[8px] sm:text-[9px] tracking-[0.6em] inv-text-muted uppercase mb-3 leading-none mt-[2px]">NAMO AMIDA BUTSU</h2>
@@ -151,7 +151,7 @@
 <canvas id="pond-canvas"></canvas>
 
 <!-- ==========================================================
-     POND ICONS (WIDELY SCATTERED LAYOUT)
+     POND ICONS (WIDELY SCATTERED LAYOUT & MALA FOR LECTURES)
 =========================================================== -->
 <div id="pond-elements-layer" class="fixed inset-0 w-full h-full pointer-events-none z-20 overflow-hidden mix-blend-difference transition-colors duration-400">
     
@@ -177,7 +177,7 @@
     </div>
 
     <!-- 2. LECTURES (Mala Beads) -->
-    <div onclick="openPondModal('lectures', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="top:45%; right:15%;">
+    <div onclick="openPondModal('lectures', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="top:25%; right:15%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 120" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -189,7 +189,7 @@
         </div>
     </div>
 
-    <!-- 3. MANTRAS (Concentric Circles) -->
+    <!-- 3. MANTRAS (Concentric Rings) -->
     <div onclick="openPondModal('mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="top:50%; left:42%;">
         <div class="relative flex flex-col items-center">
             <div class="w-14 h-14 sm:w-16 sm:h-16 relative transition-transform duration-700 transform group-hover:scale-110">
@@ -203,7 +203,7 @@
     </div>
 
     <!-- 4. THE MILLION MANTRAS -->
-    <div onclick="openPondModal('million_mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="bottom:20%; right:30%;">
+    <div onclick="openPondModal('million_mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="bottom:30%; right:35%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 120" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -215,7 +215,7 @@
     </div>
 
     <!-- 5. FURAIBO BUENOS AIRES -->
-    <div onclick="openPondModal('sanctuary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="bottom:15%; left:20%;">
+    <div onclick="openPondModal('sanctuary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="bottom:20%; left:18%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -227,7 +227,7 @@
     </div>
     
     <!-- 6. DOCUMENTARY (Movie Slate) -->
-    <div onclick="openPondModal('documentary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="bottom:12%; right:12%;">
+    <div onclick="openPondModal('documentary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="bottom:18%; right:12%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 sm:w-20 sm:h-20 relative transition-transform duration-700 transform group-hover:scale-110">
                 <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
@@ -241,7 +241,7 @@
             <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">DOCUMENTARY</span>
         </div>
     </div>
-    
+
     <!-- FOOTER -->
     <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-[#555] font-mono text-[9px] tracking-[0.4em] uppercase pointer-events-none whitespace-nowrap z-40 transition-colors">
         POWERED MOLINO STUDIO & FURAIBO BUENOS AIRES
@@ -292,15 +292,30 @@ function toggleAudio() {
 
     if (!isAudioPlaying) {
         try {
+            // Binaural Alpha Beat: 108Hz Left, 116Hz Right (8Hz Alpha Difference)
             ambientOsc = audioCtx.createOscillator();
+            let oscRight = audioCtx.createOscillator();
+            let merger = audioCtx.createChannelMerger(2);
             ambientGain = audioCtx.createGain();
+
             ambientOsc.type = "sine";
+            oscRight.type = "sine";
+            
             ambientOsc.frequency.setValueAtTime(108, audioCtx.currentTime); 
+            oscRight.frequency.setValueAtTime(116, audioCtx.currentTime);
+
+            ambientOsc.connect(merger, 0, 0); 
+            oscRight.connect(merger, 0, 1);
+            merger.connect(ambientGain);
+            ambientGain.connect(audioCtx.destination);
+
             ambientGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
             ambientGain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 3);
-            ambientOsc.connect(ambientGain);
-            ambientGain.connect(audioCtx.destination);
+            
             ambientOsc.start();
+            oscRight.start();
+            
+            ambientOsc.rightEar = oscRight; 
             isAudioPlaying = true;
             
             // Sync UI to ON
@@ -314,8 +329,11 @@ function toggleAudio() {
         if (ambientGain) {
             ambientGain.gain.cancelScheduledValues(audioCtx.currentTime);
             ambientGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
-            const oscillator = ambientOsc;
-            setTimeout(() => { try { oscillator.stop(); } catch(e) {} }, 1000);
+            const oscL = ambientOsc;
+            const oscR = ambientOsc.rightEar;
+            setTimeout(() => { 
+                try { oscL.stop(); oscR.stop(); } catch(e) {} 
+            }, 1000);
         }
         ambientOsc = null;
         ambientGain = null;
@@ -343,8 +361,8 @@ function setMode(mode) {
         isLightMode = true;
         document.body.classList.add('light');
         
-        btnW.className = "px-1 py-0.5 bg-black text-white transition-colors cursor-pointer";
-        btnB.className = "px-1 py-0.5 text-[#888] hover:text-black transition-colors cursor-pointer";
+        btnW.className = "px-1.5 h-full flex items-center justify-center bg-black text-white transition-colors cursor-pointer pt-[2px]";
+        btnB.className = "px-1.5 h-full flex items-center justify-center text-[#888] hover:text-black transition-colors cursor-pointer pt-[2px]";
         
         if(isAudioPlaying) {
             soundDot.classList.replace('bg-white', 'bg-black');
@@ -353,8 +371,8 @@ function setMode(mode) {
         isLightMode = false;
         document.body.classList.remove('light');
         
-        btnW.className = "px-1 py-0.5 text-[#888] hover:text-white transition-colors cursor-pointer";
-        btnB.className = "px-1 py-0.5 bg-white text-black transition-colors cursor-pointer";
+        btnW.className = "px-1.5 h-full flex items-center justify-center text-[#888] hover:text-white transition-colors cursor-pointer pt-[2px]";
+        btnB.className = "px-1.5 h-full flex items-center justify-center bg-white text-black transition-colors cursor-pointer pt-[2px]";
         
         if(isAudioPlaying) {
             soundDot.classList.replace('bg-black', 'bg-white');
@@ -764,7 +782,6 @@ function openPondModal(key, event) {
     const data = modalData[key];
     if (!data) return;
     
-    // Inject the selected body which now includes the headers internally
     container.innerHTML = data.body;
     
     modal.classList.remove("hidden");
@@ -783,15 +800,28 @@ function closePondModal() {
     if(autoPaceInterval) {
         clearInterval(autoPaceInterval);
         autoPaceInterval = null;
+        
+        // Reset the Auto-Pace button text visually
+        const btn = document.getElementById('auto-btn');
+        if (btn) {
+            btn.innerText = "START AUTO-PACE";
+            btn.classList.remove('bg-white', 'text-black', 'bg-black', 'text-white');
+        }
     }
 }
 
 // --- Tactile Gadget Logic ---
+
+// Pre-load the WAV audio template to allow for rapid, overlapping cloning
+const namandaAudioTemplate = new Audio("assets/audio/NAMANDA.wav");
+namandaAudioTemplate.preload = "auto";
+
 function triggerMantraClick(event) {
     try {
-        const chantAudio = new Audio("assets/audio/NAMANDA.mp3");
+        // Cloning allows overlapping playback even at fast tempos
+        const chantAudio = namandaAudioTemplate.cloneNode();
         chantAudio.volume = 1.0;
-        chantAudio.play().catch(e => {});
+        chantAudio.play().catch(e => console.log("Audio block:", e));
     } catch(e) {}
 
     const container = document.getElementById('ripple-container');
@@ -856,8 +886,6 @@ function toggleAutoPace() {
         clearInterval(autoPaceInterval);
         autoPaceInterval = null;
         btn.innerText = "START AUTO-PACE";
-        
-        // Handle visual classes based on mode
         btn.classList.remove('bg-white', 'text-black');
         if(document.body.classList.contains('light')) {
              btn.classList.remove('bg-black', 'text-white');
@@ -865,8 +893,6 @@ function toggleAutoPace() {
     } else {
         startAutoPaceLoop();
         btn.innerText = "STOP AUTO-PACE";
-        
-        // Handle visual classes based on mode
         if(document.body.classList.contains('light')) {
              btn.classList.add('bg-black', 'text-white');
         } else {
@@ -901,7 +927,9 @@ function submitEmail(e) {
     btn.innerText = "WAIT...";
     btn.disabled = true;
 
+    // Generates the exact time in Argentina
     const arTime = new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"});
+
     const scriptURL = 'https://script.google.com/macros/s/AKfycbx2AD44Pq9WqouwGnEu0RFjOEBiV5Z7-ytJiauGLQ9XMEKHY44Kx_f9EEGkVadovyzDVQ/exec';
 
     fetch(scriptURL, { 
