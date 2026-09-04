@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FURAIBO // Immersive Documentary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@200;300;400;500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root { --furaibo-red: #f1120a; }
+        /* Strict monochrome defaults */
+        html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000000; font-family: 'Inter', sans-serif; color: #ffffff; user-select: none; transition: background-color 0.4s ease, color 0.4s ease; }
+        .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+        .font-mono { font-family: 'Space Mono', monospace; }
+        
+        /* -------------------------------------------------------
+           BACKGROUND CANVAS
+        ------------------------------------------------------- */
+        #pond-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: auto; cursor: crosshair; }
+        
+        /* -------------------------------------------------------
+           ICON FLOAT
+        ------------------------------------------------------- */
+        @keyframes floatDrift1 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(22px,-16px,0); } }
+        @keyframes floatDrift2 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-24px,18px,0); } }
+        @keyframes floatDrift3 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(18px,24px,0); } }
+        .float-drift-1 { animation: floatDrift1 14s ease-in-out infinite; }
+        .float-drift-2 { animation: floatDrift2 18s ease-in-out infinite; }
+        .float-drift-3 { animation: floatDrift3 16s ease-in-out infinite; }
+        .furaibo-icon { filter: none !important; box-shadow: none !important; transition: stroke 0.3s; }
+        
+        /* -------------------------------------------------------
+           MODAL
+        ------------------------------------------------------- */
+        .modal-enter { animation: modalGrow 0.4s cubic-bezier(0.16,1,0.3,1) forwards; }
+        @keyframes modalGrow { 0% { opacity: 0; transform: scale(0.98) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--furaibo-red); }
+
+        /* -------------------------------------------------------
+           RADICAL MONOCHROME - LIGHT MODE OVERRIDES
+        ------------------------------------------------------- */
+        body.light { background-color: #ffffff; color: #000000; }
+        
+        /* Hairlines */
+        .hairline-b { border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+        body.light .hairline-b { border-bottom: 1px solid rgba(0, 0, 0, 0.15); }
+        .hairline-border { border: 1px solid rgba(255, 255, 255, 0.15); }
+        body.light .hairline-border { border: 1px solid rgba(0, 0, 0, 0.15); }
+        
+        /* Text Inversions */
+        .inv-text { color: #ffffff; }
+        body.light .inv-text { color: #000000; }
+        .inv-text-muted { color: #888888; }
+        body.light .inv-text-muted { color: #888888; }
+        
+        /* Disable blend mode on white background to prevent invisible text */
+        body.light .mix-blend-difference { mix-blend-mode: normal !important; }
+        /* Invert the white seal image to black */
+        body.light img[alt="Furaibo Seal"] { filter: invert(1); }
+        /* Force svg icons to black lines */
+        body.light .furaibo-icon { stroke: #000000 !important; color: #000000 !important; }
+        
+        /* Keep Furaibo Red strictly red */
+        .keep-red { color: var(--furaibo-red) !important; }
+        .hover\:text-red-500:hover { color: var(--furaibo-red) !important; }
+        
+        /* Buttons */
+        .btn-ui { border: 1px solid rgba(255,255,255,0.2); background: transparent; transition: all 0.2s; }
+        body.light .btn-ui { border: 1px solid rgba(0,0,0,0.2); background: transparent; }
+
+        /* -------------------------------------------------------
+           TACTILE GADGET STYLES
+        ------------------------------------------------------- */
+        .box-light-sync { background-color: #0a0a0a; border-color: #222; }
+        body.light .box-light-sync { background-color: #ffffff; border-color: #e0e0e0; }
+        .box-border-sync { border-color: #222; }
+        body.light .box-border-sync { border-color: #e0e0e0; }
+        .box-btn-sync { border-color: #222; color: #fff; }
+        body.light .box-btn-sync { border-color: #e0e0e0; color: #000; }
+        body.light .box-btn-sync:hover { background-color: #000; color: #fff; }
+        
+        .tag-invert { background-color: #ffffff; color: #000000; }
+        body.light .tag-invert { background-color: #000000; color: #ffffff; }
+        .dot-invert { background-color: #ffffff; }
+        body.light .dot-invert { background-color: #000000; }
+
+        .ripple-effect {
+            position: absolute; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.8);
+            transform: scale(0); animation: rippleAnim 0.6s linear; pointer-events: none;
+        }
+        body.light .ripple-effect { border: 1px solid rgba(0,0,0,0.5); }
+        @keyframes rippleAnim { to { transform: scale(3); opacity: 0; } }
+
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #ffffff; cursor: pointer; margin-top: -6px; border: 1px solid #222;
+        }
+        body.light input[type=range]::-webkit-slider-thumb { background: #000000; border-color: #e0e0e0; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer; background: #333333; border-radius: 2px;
+        }
+        body.light input[type=range]::-webkit-slider-runnable-track { background: #cccccc; }
+    </style>
+</head>
+<body class="dark">
+
+<!-- ==========================================================
+     GLOBAL HEADER (NO DIVIDING LINE, TIGHTER PADDING)
+=========================================================== -->
+<header class="fixed top-0 left-0 w-full z-40 p-4 sm:px-6 flex justify-between items-center pointer-events-none mix-blend-difference transition-colors duration-400">
+    <!-- LEFT: ICON ONLY -->
+    <div class="flex items-center pointer-events-auto">
+        <img src="assets/images/BlancoSello_Transparente.png" alt="Furaibo Seal" class="w-6 h-6 object-contain" onerror="this.outerHTML='<div class=\\'w-6 h-6 border border-white inv-text font-mono text-[8px] flex items-center justify-center\\'>SEAL</div>'" />
+    </div>
+    
+    <!-- RIGHT: MECHANICAL SWITCHES (TIGHTER PADDING) -->
+    <div class="pointer-events-auto flex items-center gap-2">
+        <!-- SOUND TOGGLE -->
+        <button id="sound-btn" onclick="toggleAudio()" class="btn-ui flex items-center gap-1.5 px-1.5 py-0.5 font-mono text-[9px] tracking-widest uppercase">
+            <div id="sound-dot" class="w-1.5 h-1.5 rounded-full bg-[#555] transition-colors"></div>
+            <span id="sound-text" class="inv-text-muted transition-colors leading-none">MUTED</span>
+        </button>
+
+        <!-- W/B TOGGLE -->
+        <div id="wb-toggle" class="btn-ui flex items-center p-0.5 font-mono text-[10px] tracking-widest select-none leading-none">
+            <div id="btn-w" onclick="setMode('W')" class="px-1 py-0.5 text-[#888] hover:text-white transition-colors cursor-pointer">W</div>
+            <span class="text-[#555] mx-0.5">/</span>
+            <div id="btn-b" onclick="setMode('B')" class="px-1 py-0.5 bg-white text-black transition-colors cursor-pointer">B</div>
+        </div>
+    </div>
+</header>
+
+<!-- ==========================================================
+     CENTERED PERSISTENT HEADER (MOVED UP FLUSH WITH HEADER)
+=========================================================== -->
+<div class="fixed top-[64px] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center text-center pointer-events-none w-full mix-blend-difference px-4 transition-colors duration-400">
+    <h2 class="font-mono text-[8px] sm:text-[9px] tracking-[0.6em] inv-text-muted uppercase mb-3 leading-none mt-[2px]">NAMO AMIDA BUTSU</h2>
+    <h1 class="font-bebas text-4xl sm:text-5xl tracking-widest inv-text mb-2 leading-none">FURAIBO</h1>
+    <p class="font-mono text-[8px] sm:text-[9px] tracking-[0.4em] uppercase keep-red leading-none mt-1">A SENSORIAL EXPERIENCE</p>
+</div>
+
+<!-- ==========================================================
+     INTERACTIVE POND CANVAS
+=========================================================== -->
+<canvas id="pond-canvas"></canvas>
+
+<!-- ==========================================================
+     POND ICONS (WITH ADDED DOCUMENTARY & CORRECTED LECTURES)
+=========================================================== -->
+<div id="pond-elements-layer" class="fixed inset-0 w-full h-full pointer-events-none z-20 overflow-hidden mix-blend-difference transition-colors duration-400">
+    
+    <!-- 1. CEREMONIES (Enso) -->
+    <div onclick="openPondModal('ceremonies', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="top:45%; left:18%;">
+        <div class="relative flex flex-col items-center">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 relative transition-transform duration-700 transform group-hover:scale-110">
+                <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
+                    <circle cx="50" cy="18" r="1.5" fill="currentColor" stroke="none"/>
+                    <path d="M50 28 C43 42 43 66 50 78 C57 66 57 42 50 28Z" stroke-width="1.5"/>
+                    <path d="M50 78 C38 68 32 46 41 36 C47 50 49 68 50 78Z" stroke-width="1.5"/>
+                    <path d="M50 78 C62 68 68 46 59 36 C53 50 51 68 50 78Z" stroke-width="1.5"/>
+                    <path d="M50 78 C30 72 20 54 27 45 C36 56 45 70 50 78Z" stroke-width="1.5"/>
+                    <path d="M50 78 C22 78 12 62 17 56 C28 64 42 74 50 78Z" stroke-width="1.5"/>
+                    <path d="M50 78 C70 72 80 54 73 45 C64 56 55 70 50 78Z" stroke-width="1.5"/>
+                    <path d="M50 78 C78 78 88 62 83 56 C72 64 58 74 50 78Z" stroke-width="1.5"/>
+                    <line x1="50" y1="78" x2="50" y2="88" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">CEREMONIES</span>
+            <span class="font-mono text-[8px] tracking-[0.22em] text-[#555] mt-2 transition-colors">CYCLE · PRESENCE</span>
+        </div>
+    </div>
+
+    <!-- 2. LECTURES (Mala Beads) -->
+    <div onclick="openPondModal('lectures', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="top:50%; right:18%;">
+        <div class="relative flex flex-col items-center">
+            <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
+                <svg viewBox="0 0 100 120" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
+                    <circle cx="50" cy="14" r="4.5" stroke-width="1.5"/><circle cx="60" cy="16" r="4.5" stroke-width="1.5"/><circle cx="68" cy="22" r="4.5" stroke-width="1.5"/><circle cx="74" cy="31" r="4.5" stroke-width="1.5"/><circle cx="76" cy="42" r="4.5" stroke-width="1.5"/><circle cx="74" cy="53" r="4.5" stroke-width="1.5"/><circle cx="68" cy="62" r="4.5" stroke-width="1.5"/><circle cx="60" cy="68" r="4.5" stroke-width="1.5"/><circle cx="40" cy="16" r="4.5" stroke-width="1.5"/><circle cx="32" cy="22" r="4.5" stroke-width="1.5"/><circle cx="26" cy="31" r="4.5" stroke-width="1.5"/><circle cx="24" cy="42" r="4.5" stroke-width="1.5"/><circle cx="26" cy="53" r="4.5" stroke-width="1.5"/><circle cx="32" cy="62" r="4.5" stroke-width="1.5"/><circle cx="40" cy="68" r="4.5" stroke-width="1.5"/><circle cx="50" cy="71" r="5.5" stroke-width="1.5"/><circle cx="50" cy="80" r="2.5" stroke-width="1.5"/><path d="M45 83 C44 95 42 105 45 112 C50 110 50 100 50 83 C50 100 50 110 55 112 C58 105 56 95 55 83Z" stroke-width="1.5" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">LECTURES</span>
+            <span class="font-mono text-[8px] tracking-[0.22em] text-[#555] mt-2 transition-colors">STUDY · DHARMA</span>
+        </div>
+    </div>
+
+    <!-- 3. MANTRAS (Concentric Circles) -->
+    <div onclick="openPondModal('mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="bottom:25%; left:45%;">
+        <div class="relative flex flex-col items-center">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 relative transition-transform duration-700 transform group-hover:scale-110">
+                 <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
+                    <circle cx="50" cy="50" r="40" stroke-width="1.5" stroke-dasharray="4 4"/><circle cx="50" cy="50" r="25" stroke-width="1.5"/><circle cx="50" cy="50" r="8" fill="currentColor"/>
+                </svg>
+            </div>
+            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">MANTRAS</span>
+            <span class="font-mono text-[8px] tracking-[0.22em] text-[#555] mt-2 transition-colors">SOUND · ECHO</span>
+        </div>
+    </div>
+
+    <!-- 4. THE MILLION MANTRAS -->
+    <div onclick="openPondModal('million_mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="bottom:12%; right:30%;">
+        <div class="relative flex flex-col items-center">
+            <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
+                <svg viewBox="0 0 100 120" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
+                    <line x1="50" y1="5" x2="50" y2="20" stroke-width="1.5" stroke-linecap="round"/><rect x="36" y="28" width="28" height="5" rx="1" stroke-width="1.5"/><path d="M36 33 C14 50 14 70 36 85 L64 85 C86 70 86 50 64 33Z" stroke-width="1.5"/><path d="M50 33 L50 85" stroke-width="1.2"/><path d="M43 33 C32 50 32 68 43 85" stroke-width="1.2"/><path d="M57 33 C68 50 68 68 57 85" stroke-width="1.2"/><rect x="36" y="85" width="28" height="5" rx="1" stroke-width="1.5"/><line x1="42" y1="90" x2="42" y2="102" stroke-width="1"/><line x1="50" y1="90" x2="50" y2="102" stroke-width="1"/><line x1="58" y1="90" x2="58" y2="102" stroke-width="1"/><circle cx="50" cy="106" r="2" stroke-width="1.5"/>
+                </svg>
+            </div>
+            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">THE MILLION MANTRAS</span>
+        </div>
+    </div>
+
+    <!-- 5. FURAIBO BUENOS AIRES -->
+    <div onclick="openPondModal('sanctuary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="bottom:10%; left:20%;">
+        <div class="relative flex flex-col items-center">
+            <div class="w-16 h-16 relative transition-transform duration-700 transform group-hover:scale-110">
+                <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
+                    <path d="M10 45 Q50 5 90 45" stroke-width="3" stroke-linecap="round"/><path d="M20 35 Q50 15 80 35" stroke-width="1.5" stroke-linecap="round"/><line x1="25" y1="43" x2="25" y2="85" stroke-width="2"/><line x1="75" y1="43" x2="75" y2="85" stroke-width="2"/><line x1="15" y1="85" x2="85" y2="85" stroke-width="3" stroke-linecap="round"/><rect x="40" y="55" width="20" height="30" stroke-width="1.5"/><line x1="50" y1="55" x2="50" y2="85" stroke-width="1"/><line x1="40" y1="70" x2="60" y2="70" stroke-width="1"/>
+                </svg>
+            </div>
+            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">FURAIBO BUENOS AIRES</span>
+        </div>
+    </div>
+
+    <!-- 6. DOCUMENTARY (Movie Slate) -->
+    <div onclick="openPondModal('documentary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="top:70%; right:22%;">
+        <div class="relative flex flex-col items-center">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 relative transition-transform duration-700 transform group-hover:scale-110">
+                <svg viewBox="0 0 100 100" class="furaibo-icon w-full h-full fill-none stroke-current inv-text transition-colors duration-500 group-hover:!text-[#f1120a]">
+                    <rect x="20" y="45" width="60" height="35" rx="2" stroke-width="1.5"/>
+                    <polygon points="20,40 80,30 80,45 20,45" stroke-width="1.5" stroke-linejoin="round"/>
+                    <line x1="35" y1="38" x2="45" y2="36" stroke-width="1.5"/>
+                    <line x1="55" y1="34" x2="65" y2="32" stroke-width="1.5"/>
+                    <circle cx="28" cy="40" r="1.5" fill="currentColor" stroke="none"/>
+                </svg>
+            </div>
+            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">DOCUMENTARY</span>
+        </div>
+    </div>
+    
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-[#555] font-mono text-[9px] tracking-[0.4em] uppercase pointer-events-none whitespace-nowrap z-40 transition-colors">
+        POWERED MOLINO STUDIO & FURAIBO BUENOS AIRES
+    </div>
+</div>
+
+<!-- ==========================================================
+     GLOBAL MODAL CONTAINER (BOX STRUCTURE)
+=========================================================== -->
+<div id="pond-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex-col items-center justify-center p-4 sm:p-8 overflow-y-auto transition-colors duration-500 pointer-events-auto">
+    <!-- Main Modal Box -->
+    <div class="w-full max-w-5xl box-light-sync border box-border-sync flex flex-col relative shadow-2xl modal-enter my-auto">
+        <!-- Re-rendered content gets injected here -->
+        <div id="modal-content-container" class="w-full flex-1 flex flex-col"></div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+//   AUDIO & GLOBAL START LOGIC
+// ============================================================
+let audioCtx = null;
+let isAudioPlaying = false;
+let ambientOsc = null;
+let ambientGain = null;
+
+// Audio context requires interaction. A click anywhere starts it.
+document.body.addEventListener('click', function unlockAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    document.body.removeEventListener('click', unlockAudio);
+}, { once: true });
+
+function toggleAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
+    const soundText = document.getElementById("sound-text");
+    const soundDot = document.getElementById("sound-dot");
+
+    if (!isAudioPlaying) {
+        try {
+            ambientOsc = audioCtx.createOscillator();
+            ambientGain = audioCtx.createGain();
+            ambientOsc.type = "sine";
+            ambientOsc.frequency.setValueAtTime(108, audioCtx.currentTime); 
+            ambientGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+            ambientGain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 3);
+            ambientOsc.connect(ambientGain);
+            ambientGain.connect(audioCtx.destination);
+            ambientOsc.start();
+            isAudioPlaying = true;
+            
+            // Sync UI to ON
+            soundText.innerText = "SOUND: ON";
+            soundText.classList.replace('inv-text-muted', 'inv-text');
+            soundDot.classList.replace('bg-[#555]', 'bg-white');
+            if(isLightMode) soundDot.classList.replace('bg-white', 'bg-black');
+            
+        } catch(e) { console.error("Audio generation failed:", e); }
+    } else {
+        if (ambientGain) {
+            ambientGain.gain.cancelScheduledValues(audioCtx.currentTime);
+            ambientGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
+            const oscillator = ambientOsc;
+            setTimeout(() => { try { oscillator.stop(); } catch(e) {} }, 1000);
+        }
+        ambientOsc = null;
+        ambientGain = null;
+        isAudioPlaying = false;
+        
+        // Sync UI to MUTED
+        soundText.innerText = "MUTED";
+        soundText.classList.replace('inv-text', 'inv-text-muted');
+        soundDot.classList.replace('bg-white', 'bg-[#555]');
+        soundDot.classList.replace('bg-black', 'bg-[#555]');
+    }
+}
+
+// ============================================================
+//   RADICAL MONOCHROME TOGGLE LOGIC
+// ============================================================
+let isLightMode = false;
+
+function setMode(mode) {
+    const btnW = document.getElementById('btn-w');
+    const btnB = document.getElementById('btn-b');
+    const soundDot = document.getElementById('sound-dot');
+    
+    if (mode === 'W') {
+        isLightMode = true;
+        document.body.classList.add('light');
+        
+        btnW.className = "px-1 py-0.5 bg-black text-white transition-colors cursor-pointer";
+        btnB.className = "px-1 py-0.5 text-[#888] hover:text-black transition-colors cursor-pointer";
+        
+        if(isAudioPlaying) {
+            soundDot.classList.replace('bg-white', 'bg-black');
+        }
+    } else {
+        isLightMode = false;
+        document.body.classList.remove('light');
+        
+        btnW.className = "px-1 py-0.5 text-[#888] hover:text-white transition-colors cursor-pointer";
+        btnB.className = "px-1 py-0.5 bg-white text-black transition-colors cursor-pointer";
+        
+        if(isAudioPlaying) {
+            soundDot.classList.replace('bg-black', 'bg-white');
+        }
+    }
+    
+    // Immediate Canvas Fill Override
+    if(trailCtx && width > 0) {
+        trailCtx.fillStyle = isLightMode ? '#ffffff' : '#000000';
+        trailCtx.fillRect(0, 0, width, height);
+    }
+}
+
+// Global T Keyboard Macro
+document.addEventListener('keydown', function(event) {
+    if (event.key.toLowerCase() === 't') {
+        setMode(isLightMode ? 'B' : 'W');
+    }
+    if (event.key === 'Escape') {
+        closePondModal();
+    }
+});
+
+// ============================================================
+//   KOI POND CANVAS LOGIC
+// ============================================================
+const canvas = document.getElementById('pond-canvas');
+const ctx = canvas.getContext('2d');
+const trailCanvas = document.createElement('canvas');
+const trailCtx = trailCanvas.getContext('2d');
+let width = 0, height = 0;
+
+function resizeCanvas() {
+    width = window.innerWidth || document.documentElement.clientWidth || 800;
+    height = window.innerHeight || document.documentElement.clientHeight || 600;
+    if (width <= 0) width = 800;
+    if (height <= 0) height = 600;
+    canvas.width = width;
+    canvas.height = height;
+    trailCanvas.width = width;
+    trailCanvas.height = height;
+    trailCtx.fillStyle = isLightMode ? '#ffffff' : '#000000';
+    trailCtx.fillRect(0, 0, width, height);
+}
+window.addEventListener('resize', resizeCanvas);
+setTimeout(resizeCanvas, 50);
+
+const ripples = [];
+function addRipple(x, y, maxR = 80) { ripples.push({ x, y, radius: 2, maxRadius: maxR, opacity: 0.6 }); }
+canvas.addEventListener('mousemove', (e) => { if (Math.random() < 0.08) addRipple(e.clientX, e.clientY, 35); });
+canvas.addEventListener('click', (e) => { addRipple(e.clientX, e.clientY, 100); });
+
+const kois = [
+    { x: Math.random() * width, y: Math.random() * height, angle: Math.random() * Math.PI * 2, speed: 0.8, color: 'rgba(217, 35, 35, 0.4)', isCreator: true },
+    { x: Math.random() * width, y: Math.random() * height, angle: Math.random() * Math.PI * 2, speed: 0.7, color: 'rgba(255, 255, 255, 0.15)', isCreator: true },
+    { x: Math.random() * width, y: Math.random() * height, angle: Math.random() * Math.PI * 2, speed: 0.9, color: 'rgba(0, 0, 0, 1)', isCreator: false },
+    { x: Math.random() * width, y: Math.random() * height, angle: Math.random() * Math.PI * 2, speed: 0.85, color: 'rgba(0, 0, 0, 1)', isCreator: false }
+];
+
+function drawPond() {
+    if (width <= 0 || canvas.width <= 0 || trailCanvas.width <= 0) resizeCanvas();
+    if (canvas.width <= 0 || canvas.height <= 0 || trailCanvas.width <= 0 || trailCanvas.height <= 0) {
+        requestAnimationFrame(drawPond);
+        return;
+    }
+    
+    // Fill based on Light/Dark Mode
+    ctx.fillStyle = isLightMode ? '#ffffff' : '#000000';
+    ctx.fillRect(0, 0, width, height);
+    trailCtx.fillStyle = isLightMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)';
+    trailCtx.fillRect(0, 0, width, height);
+
+    kois.forEach(k => {
+        k.angle += (Math.random() - 0.5) * 0.035;
+        k.x += Math.cos(k.angle) * k.speed;
+        k.y += Math.sin(k.angle) * k.speed;
+        if (k.x < -60) k.x = width + 60;
+        if (k.x > width + 60) k.x = -60;
+        if (k.y < -60) k.y = height + 60;
+        if (k.y > height + 60) k.y = -60;
+
+        trailCtx.save();
+        trailCtx.beginPath();
+        trailCtx.arc(k.x, k.y, 1.8, 0, Math.PI * 2);
+        
+        // Trail Color adjustment for Light Mode
+        if (isLightMode && !k.isCreator) {
+             trailCtx.fillStyle = 'rgba(200, 200, 200, 1)';
+             trailCtx.shadowColor = 'rgba(200, 200, 200, 1)';
+        } else {
+             trailCtx.fillStyle = k.color;
+             trailCtx.shadowColor = k.color;
+        }
+        
+        trailCtx.shadowBlur = 4;
+        trailCtx.fill();
+        trailCtx.restore();
+
+        ctx.save();
+        ctx.translate(k.x, k.y);
+        ctx.rotate(k.angle);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 12, 5, 0, 0, Math.PI * 2);
+        ctx.moveTo(-12, 0);
+        ctx.quadraticCurveTo(-18, -4, -22, -2);
+        ctx.moveTo(-12, 0);
+        ctx.quadraticCurveTo(-18, 4, -22, 2);
+        
+        // Adjust Koi colors for visibility in Light Mode
+        let colorBase = k.color.includes('217') ? 'rgba(241, 18, 10, 0.7)' : (isLightMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)');
+        let colorOther = isLightMode ? 'rgba(200, 200, 200, 0.6)' : 'rgba(80, 80, 80, 0.6)';
+        ctx.strokeStyle = k.isCreator ? colorBase : colorOther;
+        
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        ctx.restore();
+    });
+    
+    if (trailCanvas.width > 0 && trailCanvas.height > 0) ctx.drawImage(trailCanvas, 0, 0);
+
+    for (let i = ripples.length - 1; i >= 0; i--) {
+        const r = ripples[i];
+        r.radius += 0.8;
+        r.opacity -= 0.008;
+        if (r.opacity <= 0 || r.radius >= r.maxRadius) { ripples.splice(i, 1); continue; }
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(241, 18, 10, ${r.opacity})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+    requestAnimationFrame(drawPond);
+}
+window.onload = function() { setTimeout(drawPond, 100); };
+
+// ============================================================
+//   MODAL DATA 
+// ============================================================
+let localMantraSessionCount = 0; 
+let globalCount = 843920; 
+let autoPaceInterval = null;
+let currentCPM = 40;
+
+const modalData = {
+    ceremonies: {
+        title: "CEREMONIES",
+        body: `
+        <!-- Generic Header -->
+        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
+            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">CEREMONIES</span>
+            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+                × CLOSE [ESC]
+            </button>
+        </div>
+        <!-- Body -->
+        <div class="p-6 sm:p-8 space-y-8">
+            <p class="font-inter text-base sm:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
+                Visual and sound archives from ceremonies held at Furaibo in Buenos Aires.
+            </p>
+            <div class="pt-6 border-t box-border-sync flex flex-col gap-2">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">Urabon-e Ceremony</span>
+                    <div class="flex gap-6">
+                        <a href="https://drive.google.com/open?id=17dy98-JFjTy0k8w7RdU-XP1lz7-KbkHh&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=16-NULnnYv08lZB3APRFNOPMKVL-f4Riu&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] JO-BUTSU Ceremony</span>
+                    <div class="flex gap-6"><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">▶ WATCH</span><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">✦ LISTEN</span></div>
+                </div>
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] GANTAN CEREMONY</span>
+                    <div class="flex gap-6"><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">▶ WATCH</span><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">✦ LISTEN</span></div>
+                </div>
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] HOU-ON-KOU CEREMONY</span>
+                    <div class="flex gap-6"><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">▶ WATCH</span><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">✦ LISTEN</span></div>
+                </div>
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/20 border border-transparent opacity-50">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-600 uppercase">[UPCOMING] NEHAN-E CEREMONY</span>
+                    <div class="flex gap-6"><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">▶ WATCH</span><span class="font-mono text-[10px] text-zinc-700 tracking-widest uppercase">✦ LISTEN</span></div>
+                </div>
+            </div>
+        </div>`
+    },
+    lectures: {
+        title: "LECTURES",
+        body: `
+        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
+            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">LECTURES</span>
+            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+                × CLOSE [ESC]
+            </button>
+        </div>
+        <div class="p-6 sm:p-8 space-y-8">
+            <p class="font-inter text-base sm:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
+                Direct recordings from weekly community sessions led by Sensei Gustavo and the Sangha.
+            </p>
+            <div class="pt-6 border-t box-border-sync flex flex-col gap-2">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE MARCH 03, 2026</span>
+                    <div class="flex gap-6">
+                        <a href="https://drive.google.com/open?id=1bSHTEvJaWLLjTwDx4O3qn3xCbbawJkil&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1zQ_SBHF8Fq7rDO44hRElyo0vG6wMcjlU&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 04, 2026</span>
+                    <div class="flex gap-6">
+                        <a href="https://drive.google.com/open?id=1lNMpW9p8LVfeFXkfQpBFNzLGWN9y3TP3&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1lToc-6-5fHGZGJohHjxI9GOVUfz0O9o7&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                    </div>
+                </div>
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 11, 2026</span>
+                    <div class="flex gap-6">
+                        <a href="https://drive.google.com/open?id=1zjEkLWz5_9dWrbq_vuzRaGW2BHoDsOvP&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=16eSuMM7BjsKS4BgK94c7lBinFxh3jAPL&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                    </div>
+                </div>
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">LECTURE AUGUST 18, 2026</span>
+                    <div class="flex gap-6">
+                        <a href="https://drive.google.com/open?id=1uVrw7K5EBFNhVsQaHhdcK_joqMjHH9_G&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1AwJNHrv45FU6zCPrBD7LwwrbWWjAijtR&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                    </div>
+                </div>
+            </div>
+        </div>`
+    },
+    mantras: {
+        title: "MANTRAS",
+        body: `
+        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
+            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">MANTRAS</span>
+            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+                × CLOSE [ESC]
+            </button>
+        </div>
+        <div class="p-6 sm:p-8 space-y-8">
+            <p class="font-inter text-base sm:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
+                Recordings focused purely on the practice, chants, and acoustic space of weekly recitations.
+            </p>
+            <div class="pt-6 border-t box-border-sync flex flex-col gap-2">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS JULY 30, 2026</span>
+                    <div class="flex gap-6">
+                        <a href="https://drive.google.com/open?id=1eIIJaFFGTj5OXWgusXL08SZIcq8rsKvL&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1R_MJspgrBzfLyTcmHpdt7UrqwLak1AbO&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 06, 2026</span>
+                    <div class="flex gap-6">
+                        <a href="https://drive.google.com/open?id=1kvvK3sBeLVdLwiSO3Qdvwt0dHE0bOFum&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1n-srTgO2tNb82mESn8oJ71FVj9j8gGUU&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 14, 2026</span>
+                    <div class="flex gap-6">
+                        <a href="https://drive.google.com/open?id=1GiHSQ3qb2wUrGywdA0nQIwOsXZZcPda1&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1n-UrEnxMpt7dNLZ2HNHzY9j_aucxSmn0&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                    </div>
+                </div>
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded bg-black/40 border box-border-sync hover:border-red-600/30 transition-all group">
+                    <span class="font-mono text-[11px] tracking-widest text-zinc-300 group-hover:text-white uppercase">MANTRAS AUGUST 20, 2026</span>
+                    <div class="flex gap-6">
+                        <a href="https://drive.google.com/open?id=1kVS04hCAg7BMO1lShj6vpcN2cix0yuR5&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">▶ WATCH</a>
+                        <a href="https://drive.google.com/open?id=1d3Mc7I-8ykmLacWvkS-cLeD5PGZiF9et&usp=drive_copy" target="_blank" class="font-mono text-[10px] text-zinc-500 hover:text-red-500 transition-colors tracking-widest uppercase">✦ LISTEN</a>
+                    </div>
+                </div>
+            </div>
+        </div>`
+    },
+    million_mantras: {
+        title: "THE MILLION MANTRAS",
+        body: `
+        <!-- Custom Header inside the box structure -->
+        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
+            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">THE MILLION MANTRAS</span>
+            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+                × CLOSE [ESC]
+            </button>
+        </div>
+
+        <!-- Top Info Row -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end p-6 sm:p-8 border-b box-border-sync gap-8">
+            <div class="flex flex-col max-w-2xl gap-3">
+                <span class="font-inter font-light text-[13px] sm:text-sm tracking-wide inv-text leading-relaxed">The One Million Mantras is Furaibo’s annual gathering dedicated to the sustained, collective recitation of Namu Amida Butsu.</span>
+                <span class="font-inter text-[11px] text-[#888] leading-relaxed">Find your own pace and prepare for the upcoming ceremony. Use this space to practice your personal recitation.</span>
+            </div>
+            <div class="flex flex-col items-start md:items-end shrink-0">
+                <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase mb-1">AGGREGATE COUNT</span>
+                <span class="font-mono text-3xl sm:text-4xl inv-text" id="global-tally">843,920</span>
+            </div>
+        </div>
+
+        <!-- Inner Gadget Box -->
+        <div class="p-6 sm:p-8">
+            <div class="w-full border box-border-sync p-6 sm:p-12 flex flex-col items-center relative">
+                
+                <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] absolute top-6 uppercase tag-invert px-2 py-0.5">WHEREVER YOU ARE, ENTER THE PRACTICE WITH US.</span>
+
+                <!-- Circular Button -->
+                <div class="relative w-40 h-40 sm:w-48 sm:h-48 mt-12 mb-10 flex items-center justify-center">
+                    <button id="mantra-btn" onpointerdown="triggerMantraClick(event)" class="absolute z-10 w-full h-full rounded-full border border-white box-border-sync flex flex-col items-center justify-center bg-transparent outline-none transition-transform duration-75 hover:bg-white/5 active:scale-95">
+                        <div class="w-4 h-4 rounded-full border-2 border-white box-border-sync flex items-center justify-center mb-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-white dot-invert"></div>
+                        </div>
+                        <span class="font-bebas text-2xl tracking-widest inv-text mt-1">NAMANDA</span>
+                        <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] mt-2">TAP TO CHANT</span>
+                    </button>
+                    <div id="ripple-container" class="absolute inset-0 pointer-events-none rounded-full"></div>
+                </div>
+
+                <!-- Session Counter -->
+                <div class="flex flex-col items-center mb-10">
+                    <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase mb-2">YOUR SESSION RECITATIONS</span>
+                    <div class="flex items-center gap-4">
+                        <span class="font-mono text-4xl sm:text-5xl inv-text tracking-widest" id="local-session-counter">00000</span>
+                        <button id="sync-btn" onclick="addToGlobal(event)" class="font-mono text-[9px] tracking-widest border border-[#222] box-border-sync px-2 py-1 box-btn-sync transition-colors uppercase" title="Add to Aggregate Count">
+                            + SYNC
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Control Panel -->
+                <div class="w-full max-w-md border-t border-dashed border-[#555] pt-6 flex flex-col gap-6">
+                    <div class="flex justify-between items-center w-full">
+                        <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase">TEMPO PACE</span>
+                        <span class="font-mono text-[10px] tracking-widest inv-text font-bold" id="cpm-display">40 CPM</span>
+                    </div>
+                    
+                    <input type="range" id="tempo-slider" min="40" max="150" value="40" oninput="updateTempo(this.value)">
+                    
+                    <div class="flex justify-between items-center w-full">
+                        <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase">40 SLOW • 150 FAST</span>
+                        <button id="auto-btn" onclick="toggleAutoPace()" class="font-mono text-[10px] tracking-widest border border-[#222] box-border-sync px-4 py-2 box-btn-sync transition-colors uppercase">
+                            START AUTO-PACE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>`
+    },
+    sanctuary: {
+        title: "FURAIBO BUENOS AIRES",
+        body: `
+        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
+            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">FURAIBO BUENOS AIRES</span>
+            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+                × CLOSE [ESC]
+            </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 p-6 sm:p-8 items-center pointer-events-auto">
+            <div class="space-y-12 pr-0 md:pr-12">
+                <p class="font-inter text-base sm:text-lg font-light leading-relaxed inv-text-muted">
+                    In Buenos Aires, Furaibo brings together a restaurant, a natural medicine practice and a Buddhist temple within the same place.
+                </p>
+                <div class="flex flex-col gap-6 font-mono text-xs sm:text-sm text-zinc-400">
+                    <a href="https://www.furaiboba.com.ar/" target="_blank" class="hover:text-white transition-colors">FURAIBOBA.COM.AR</a>
+                    <a href="https://www.instagram.com/furaiboba/" target="_blank" class="hover:text-white transition-colors">@FURAIBOBA</a>
+                    <a href="https://goo.gl/maps/p3Djc2dhpfken5pKA" target="_blank" class="hover:text-white transition-colors">ADOLFO ALSINA 429 · BUENOS AIRES</a>
+                </div>
+            </div>
+            <div class="flex justify-center md:justify-end">
+                <img src="assets/images/CLEAN_Furaibo_full_text-upscaled.png" alt="Furaibo Demon Logo" class="w-full max-w-[250px] md:max-w-[300px] object-contain" onerror="this.outerHTML='<div class=\\'w-48 h-64 border border-zinc-800 flex items-center justify-center text-xs text-zinc-600\\'>FURAIBO LOGO</div>'" />
+            </div>
+        </div>`
+    },
+    documentary: {
+        title: "DOCUMENTARY",
+        body: `
+        <div class="w-full flex justify-between items-center p-4 sm:px-6 border-b box-border-sync">
+            <span class="font-mono text-[10px] tracking-widest inv-text font-bold uppercase">DOCUMENTARY</span>
+            <button onclick="closePondModal()" class="font-mono text-[9px] tracking-widest border px-3 py-1 box-btn-sync transition-colors uppercase">
+                × CLOSE [ESC]
+            </button>
+        </div>
+        <div class="p-6 sm:p-8 space-y-8 pointer-events-auto">
+            <p class="font-inter text-base sm:text-lg font-light leading-relaxed max-w-2xl inv-text-muted">
+                The visual journey documenting the temple, the practice, and the people of Furaibo.
+            </p>
+            <div class="pt-6 border-t box-border-sync">
+                <p class="font-mono text-[10px] tracking-widest text-[#888] mb-12 uppercase">[ IN PRODUCTION ]</p>
+                
+                <!-- Email Signup -->
+                <div class="w-full max-w-md">
+                    <span class="font-mono text-[9px] tracking-[0.2em] text-[#888] uppercase block mb-3">RECEIVE PRODUCTION UPDATES</span>
+                    <form onsubmit="event.preventDefault(); alert('Subscribed');" class="flex w-full border box-border-sync">
+                        <input type="email" placeholder="RECIPIENT EMAIL" required class="flex-1 bg-transparent inv-text px-4 py-3 outline-none placeholder:text-[#555] font-mono tracking-widest text-[10px]" />
+                        <button type="submit" class="bg-white text-black px-6 py-3 font-mono text-[10px] tracking-widest font-bold hover:bg-zinc-200 transition-colors">ENTER</button>
+                    </form>
+                </div>
+            </div>
+        </div>`
+    }
+};
+
+function openPondModal(key, event) {
+    if (event) event.stopPropagation();
+    const modal = document.getElementById("pond-modal");
+    const container = document.getElementById("modal-content-container");
+    const data = modalData[key];
+    if (!data) return;
+    
+    // Inject the selected body which now includes the headers internally
+    container.innerHTML = data.body;
+    
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    
+    if (key === 'million_mantras') {
+        updateLocalCounterDisplay();
+        document.getElementById('global-tally').innerText = globalCount.toLocaleString();
+    }
+}
+
+function closePondModal() {
+    const modal = document.getElementById("pond-modal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+    if(autoPaceInterval) {
+        clearInterval(autoPaceInterval);
+        autoPaceInterval = null;
+    }
+}
+
+// --- Tactile Gadget Logic ---
+function triggerMantraClick(event) {
+    try {
+        const chantAudio = new Audio("assets/audio/NAMANDA.mp3");
+        chantAudio.volume = 1.0;
+        chantAudio.play().catch(e => {});
+    } catch(e) {}
+
+    const container = document.getElementById('ripple-container');
+    if (container) {
+        const ripple = document.createElement('div');
+        ripple.classList.add('ripple-effect');
+        let x = container.clientWidth / 2;
+        let y = container.clientHeight / 2;
+        
+        if (event && event.offsetX) {
+            x = event.offsetX;
+            y = event.offsetY;
+        }
+
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        
+        container.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    }
+
+    localMantraSessionCount++;
+    updateLocalCounterDisplay();
+}
+
+function updateLocalCounterDisplay() {
+    const display = document.getElementById("local-session-counter");
+    if (display) {
+        display.innerText = localMantraSessionCount.toString().padStart(5, '0');
+    }
+}
+
+function addToGlobal(event) {
+    if(localMantraSessionCount > 0) {
+        globalCount += localMantraSessionCount;
+        localMantraSessionCount = 0;
+        updateLocalCounterDisplay();
+        document.getElementById('global-tally').innerText = globalCount.toLocaleString();
+        
+        const btn = document.getElementById('sync-btn');
+        if(btn) {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "SYNCED ✓";
+            setTimeout(() => { btn.innerHTML = originalText; }, 1500);
+        }
+    }
+}
+
+function updateTempo(val) {
+    currentCPM = val;
+    document.getElementById('cpm-display').innerText = `${val} CPM`;
+    
+    if (autoPaceInterval) {
+        clearInterval(autoPaceInterval);
+        startAutoPaceLoop();
+    }
+}
+
+function toggleAutoPace() {
+    const btn = document.getElementById('auto-btn');
+    if (autoPaceInterval) {
+        clearInterval(autoPaceInterval);
+        autoPaceInterval = null;
+        btn.innerText = "START AUTO-PACE";
+        
+        // Handle visual classes based on mode
+        btn.classList.remove('bg-white', 'text-black');
+        if(document.body.classList.contains('light')) {
+             btn.classList.remove('bg-black', 'text-white');
+        }
+    } else {
+        startAutoPaceLoop();
+        btn.innerText = "STOP AUTO-PACE";
+        
+        // Handle visual classes based on mode
+        if(document.body.classList.contains('light')) {
+             btn.classList.add('bg-black', 'text-white');
+        } else {
+             btn.classList.add('bg-white', 'text-black');
+        }
+    }
+}
+
+function startAutoPaceLoop() {
+    const msPerClick = (60 / currentCPM) * 1000;
+    autoPaceInterval = setInterval(() => {
+        const btn = document.getElementById('mantra-btn');
+        if(btn) {
+            btn.style.transform = "scale(0.95)";
+            setTimeout(() => btn.style.transform = "scale(1)", 100);
+            triggerMantraClick(null);
+        }
+    }, msPerClick);
+}
+
+</script>
+</body>
+</html>
