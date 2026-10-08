@@ -124,12 +124,10 @@
 <body class="dark font-inter">
 
 <header class="fixed top-0 left-0 w-full z-40 p-4 sm:px-6 flex justify-between items-center pointer-events-none mix-blend-difference transition-colors duration-400">
-    <!-- Double-sized seal logo: w-12 h-12 -->
     <div class="flex items-center pointer-events-auto">
         <img src="assets/images/BlancoSello_Transparente.png" alt="Furaibo Seal" class="w-12 h-12 object-contain" onerror="this.outerHTML='<div class=\'w-12 h-12 border border-white inv-text font-mono text-[8px] flex items-center justify-center\'>SEAL</div>'" />
     </div>
     
-    <!-- Uniform height controls: h-7 -->
     <div class="pointer-events-auto flex items-center gap-2">
         <!-- SOUND TOGGLE -->
         <button id="sound-btn" onclick="window.toggleAudio()" class="btn-ui flex items-center justify-center gap-1.5 h-7 px-2 font-mono text-[10px] tracking-widest uppercase">
@@ -169,7 +167,7 @@
 
 <div id="pond-elements-layer" class="fixed inset-0 w-full h-full pointer-events-none z-20 overflow-hidden mix-blend-difference transition-colors duration-400">
     
-    <!-- 1. CEREMONIES (Enso) -->
+    <!-- 1. CEREMONIES (Enso Lotus) -->
     <div onclick="window.openPondModal('ceremonies', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="top:30%; left:12%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 sm:w-20 sm:h-20 relative transition-transform duration-700 transform group-hover:scale-110">
@@ -190,7 +188,7 @@
         </div>
     </div>
 
-    <!-- 2. LECTURES (Mala Beads) -->
+    <!-- 2. TALK ON BUDDHISM (Mala Beads) -->
     <div onclick="window.openPondModal('lectures', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="top:25%; right:15%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
@@ -198,12 +196,12 @@
                     <circle cx="50" cy="14" r="4.5" stroke-width="1.5"/><circle cx="60" cy="16" r="4.5" stroke-width="1.5"/><circle cx="68" cy="22" r="4.5" stroke-width="1.5"/><circle cx="74" cy="31" r="4.5" stroke-width="1.5"/><circle cx="76" cy="42" r="4.5" stroke-width="1.5"/><circle cx="74" cy="53" r="4.5" stroke-width="1.5"/><circle cx="68" cy="62" r="4.5" stroke-width="1.5"/><circle cx="60" cy="68" r="4.5" stroke-width="1.5"/><circle cx="40" cy="16" r="4.5" stroke-width="1.5"/><circle cx="32" cy="22" r="4.5" stroke-width="1.5"/><circle cx="26" cy="31" r="4.5" stroke-width="1.5"/><circle cx="24" cy="42" r="4.5" stroke-width="1.5"/><circle cx="26" cy="53" r="4.5" stroke-width="1.5"/><circle cx="32" cy="62" r="4.5" stroke-width="1.5"/><circle cx="40" cy="68" r="4.5" stroke-width="1.5"/><circle cx="50" cy="71" r="5.5" stroke-width="1.5"/><circle cx="50" cy="80" r="2.5" stroke-width="1.5"/><path d="M45 83 C44 95 42 105 45 112 C50 110 50 100 50 83 C50 100 50 110 55 112 C58 105 56 95 55 83Z" stroke-width="1.5" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">LECTURES</span>
+            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">TALK ON BUDDHISM</span>
             <span class="font-mono text-[8px] tracking-[0.22em] text-[#555] mt-2 transition-colors">STUDY · DHARMA</span>
         </div>
     </div>
 
-    <!-- 3. MANTRAS (Concentric Circles) -->
+    <!-- 3. NIGHT OF MANTRAS (Concentric Rings) -->
     <div onclick="window.openPondModal('mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-3" style="top:50%; left:42%;">
         <div class="relative flex flex-col items-center">
             <div class="w-14 h-14 sm:w-16 sm:h-16 relative transition-transform duration-700 transform group-hover:scale-110">
@@ -211,12 +209,12 @@
                     <circle cx="50" cy="50" r="40" stroke-width="1.5" stroke-dasharray="4 4"/><circle cx="50" cy="50" r="25" stroke-width="1.5"/><circle cx="50" cy="50" r="8" fill="currentColor"/>
                 </svg>
             </div>
-            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">MANTRAS</span>
+            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">NIGHT OF MANTRAS</span>
             <span class="font-mono text-[8px] tracking-[0.22em] text-[#555] mt-2 transition-colors">SOUND · ECHO</span>
         </div>
     </div>
 
-    <!-- 4. THE MILLION MANTRAS -->
+    <!-- 4. MILLION MANTRAS (Fluted Lantern) -->
     <div onclick="window.openPondModal('million_mantras', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-1" style="bottom:30%; right:35%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-20 sm:w-20 sm:h-24 relative transition-transform duration-700 transform group-hover:scale-110">
@@ -224,11 +222,11 @@
                     <line x1="50" y1="5" x2="50" y2="20" stroke-width="1.5" stroke-linecap="round"/><rect x="36" y="28" width="28" height="5" rx="1" stroke-width="1.5"/><path d="M36 33 C14 50 14 70 36 85 L64 85 C86 70 86 50 64 33Z" stroke-width="1.5"/><path d="M50 33 L50 85" stroke-width="1.2"/><path d="M43 33 C32 50 32 68 43 85" stroke-width="1.2"/><path d="M57 33 C68 50 68 68 57 85" stroke-width="1.2"/><rect x="36" y="85" width="28" height="5" rx="1" stroke-width="1.5"/><line x1="42" y1="90" x2="42" y2="102" stroke-width="1"/><line x1="50" y1="90" x2="50" y2="102" stroke-width="1"/><line x1="58" y1="90" x2="58" y2="102" stroke-width="1"/><circle cx="50" cy="106" r="2" stroke-width="1.5"/>
                 </svg>
             </div>
-            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">THE MILLION MANTRAS</span>
+            <span class="font-mono text-[9px] tracking-[0.35em] inv-text-muted mt-3 transition-colors">MILLION MANTRAS</span>
         </div>
     </div>
 
-    <!-- 5. FURAIBO BUENOS AIRES -->
+    <!-- 5. FURAIBO BUENOS AIRES (Torii Gate) -->
     <div onclick="window.openPondModal('sanctuary', event)" class="absolute pointer-events-auto cursor-pointer group float-drift-2" style="bottom:20%; left:18%;">
         <div class="relative flex flex-col items-center">
             <div class="w-16 h-16 relative transition-transform duration-700 transform group-hover:scale-110">
@@ -314,15 +312,12 @@ window.toggleAudio = function() {
 
     if (!isAudioPlaying) {
         try {
-            // Binaural Beat + Mobile-Optimized Resonant Filter (108Hz Left, 116Hz Right)
             ambientOsc = audioCtx.createOscillator();
             let oscRight = audioCtx.createOscillator();
             let merger = audioCtx.createChannelMerger(2);
             let filter = audioCtx.createBiquadFilter();
             ambientGain = audioCtx.createGain();
 
-            // Triangle wave passed through a 380Hz lowpass filter produces warm singing-bowl harmonics
-            // that phone speakers can clearly reproduce, while keeping the deep 108Hz binaural root
             ambientOsc.type = "triangle";
             oscRight.type = "triangle";
             
@@ -339,7 +334,6 @@ window.toggleAudio = function() {
             filter.connect(ambientGain);
             ambientGain.connect(audioCtx.destination);
 
-            // Boosted gain ramp (more than 2.5x louder than original 0.08)
             ambientGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
             ambientGain.gain.exponentialRampToValueAtTime(0.22, audioCtx.currentTime + 3);
             
@@ -592,10 +586,10 @@ window.modalData = {
         </div>`
     },
     lectures: {
-        title: "LECTURES",
+        title: "TALK ON BUDDHISM",
         body: `
         <div class="w-full flex justify-between items-center p-3.5 sm:p-4 sm:px-6 border-b box-border-sync shrink-0 sticky top-0 z-20 box-light-sync">
-            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">LECTURES</span>
+            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">TALK ON BUDDHISM</span>
             <button onclick="window.closePondModal()" class="font-mono text-[9px] sm:text-[10px] tracking-widest border px-3 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
                 × CLOSE <span class="hidden sm:inline">[ESC]</span>
             </button>
@@ -637,10 +631,10 @@ window.modalData = {
         </div>`
     },
     mantras: {
-        title: "MANTRAS",
+        title: "NIGHT OF MANTRAS",
         body: `
         <div class="w-full flex justify-between items-center p-3.5 sm:p-4 sm:px-6 border-b box-border-sync shrink-0 sticky top-0 z-20 box-light-sync">
-            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">MANTRAS</span>
+            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">NIGHT OF MANTRAS</span>
             <button onclick="window.closePondModal()" class="font-mono text-[9px] sm:text-[10px] tracking-widest border px-3 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
                 × CLOSE <span class="hidden sm:inline">[ESC]</span>
             </button>
@@ -682,10 +676,10 @@ window.modalData = {
         </div>`
     },
     million_mantras: {
-        title: "THE MILLION MANTRAS",
+        title: "MILLION MANTRAS",
         body: `
         <div class="w-full flex justify-between items-center p-3.5 sm:p-4 sm:px-6 border-b box-border-sync shrink-0 sticky top-0 z-20 box-light-sync">
-            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">THE MILLION MANTRAS</span>
+            <span class="font-mono text-[10px] sm:text-[11px] tracking-widest inv-text font-bold uppercase">MILLION MANTRAS</span>
             <button onclick="window.closePondModal()" class="font-mono text-[9px] sm:text-[10px] tracking-widest border px-3 py-1.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
                 × CLOSE <span class="hidden sm:inline">[ESC]</span>
             </button>
@@ -734,10 +728,10 @@ window.modalData = {
                             <span class="font-mono text-[9px] sm:text-[10px] tracking-widest inv-text font-bold" id="cpm-display">40 CPM</span>
                         </div>
                         
-                        <input type="range" id="tempo-slider" min="40" max="150" value="40" oninput="window.updateTempo(this.value)" class="touch-manipulation py-2">
+                        <input type="range" id="tempo-slider" min="40" max="200" value="40" oninput="window.updateTempo(this.value)" class="touch-manipulation py-2">
                         
                         <div class="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 w-full">
-                            <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase">40 SLOW • 150 FAST</span>
+                            <span class="font-mono text-[8px] tracking-[0.2em] text-[#888] uppercase">40 SLOW • 200 FAST</span>
                             <button id="auto-btn" onclick="window.toggleAutoPace()" class="w-full sm:w-auto font-mono text-[9px] sm:text-[10px] tracking-widest border border-[#222] box-border-sync px-4 py-2.5 box-btn-sync transition-colors uppercase active:scale-95 touch-manipulation">
                                 START AUTO-PACE
                             </button>
@@ -845,7 +839,6 @@ window.openPondModal = function(key, event) {
 
 window.closePondModal = function() {
     const modal = document.getElementById("pond-modal");
-    // Intercept closing only if there are unsynced recitations
     if (window.totalUnsynced > 0 && modal.querySelector('#registration-overlay')) {
         window.isClosingModal = true;
         window.openRegistrationOverlay();
@@ -882,13 +875,29 @@ window.forceCloseModal = function() {
     window.totalUnsynced = 0;
 };
 
-const namandaAudioTemplate = new Audio("assets/audio/NAMANDA.wav");
-namandaAudioTemplate.preload = "auto";
+// Primary and Secondary Audio Templates (Slow and Fast)
+const audioSlow = new Audio("assets/audio/NAMANDA.mp3");
+audioSlow.preload = "auto";
+audioSlow.onerror = () => { audioSlow.src = "assets/audio/NAMANDA.wav"; };
+
+const audioFast = new Audio("assets/audio/NAMANDA_FAST.mp3");
+audioFast.preload = "auto";
+audioFast.onerror = () => { audioFast.src = "assets/audio/NAMANDA.wav"; };
 
 window.triggerMantraClick = function(event) {
     try {
-        const chantAudio = namandaAudioTemplate.cloneNode();
+        // Switch between meditative slow sample and staccato fast sample at 110 CPM threshold
+        const selectedAudio = (window.currentCPM >= 110) ? audioFast : audioSlow;
+        const chantAudio = selectedAudio.cloneNode();
         chantAudio.volume = 1.0;
+        
+        // Micro-pitch adjustment within each tier for seamless pacing
+        if (window.currentCPM >= 110) {
+            chantAudio.playbackRate = 1.0 + ((window.currentCPM - 110) / 90) * 0.25;
+        } else {
+            chantAudio.playbackRate = 0.95 + ((window.currentCPM - 40) / 70) * 0.15;
+        }
+
         chantAudio.play().catch(e => console.log("Audio trigger:", e));
     } catch(e) {}
 
@@ -1021,7 +1030,7 @@ window.finishSyncFlow = function() {
 };
 
 window.updateTempo = function(val) {
-    window.currentCPM = val;
+    window.currentCPM = parseInt(val, 10);
     const display = document.getElementById('cpm-display');
     if (display) display.innerText = `${val} CPM`;
     if (window.autoPaceInterval) {
@@ -1065,7 +1074,6 @@ window.startAutoPaceLoop = function() {
 };
 
 window.fetchLiveCount = function() {
-    // Attempt local storage restore first so tally is never blank
     try {
         const cached = localStorage.getItem('furaibo_global_count');
         if (cached && !window.globalCount) {
@@ -1075,7 +1083,6 @@ window.fetchLiveCount = function() {
         }
     } catch(e) {}
 
-    // Fetch with redirect follow for Google Apps Script 302 handling
     fetch(SHEET_URL + "?action=get_count&t=" + Date.now(), { 
         method: 'GET',
         redirect: 'follow',
@@ -1097,9 +1104,7 @@ window.fetchLiveCount = function() {
             if (display) display.innerText = window.globalCount.toLocaleString();
         }
     })
-    .catch(err => {
-        // Gracefully keep current count without throwing loud console errors
-    });
+    .catch(err => {});
 };
 
 window.fetchLiveCount();
